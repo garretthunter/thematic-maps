@@ -115,7 +115,12 @@ class Thematic_Maps_Public {
 				  Posts.id = PostMeta.post_id AND
 				  Posts.post_status = 'publish'
 			group by PostMeta.meta_value");
-	?>
+		
+		$total_signatures = 0;
+		foreach( $results as $signature ) {
+			$total_signatures += $signature->signatures;
+		}
+	    ?>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div id="geochart-colors" ></div>
 	<script type="text/javascript">
@@ -128,19 +133,20 @@ class Thematic_Maps_Public {
 		  function drawRegionsMap() {
 			var data = google.visualization.arrayToDataTable([
 			  ['Province', 'Signatures'],
-	<?php
+	    <?php
 		foreach ($results as $signature)
 		{
 			echo sprintf ("['%s', %d],\n", $signature->state,$signature->signatures);
 		}
-	?>
-		['AR', 10]
+	    ?>
 			]);
 	
 			var options = {
 			  region: 'US',
 			  resolution: 'provinces',
 			  colorAxis: {
+				minValue: 0,
+				maxValue: <?php echo $total_signatures; ?>,
 				colors: ['#DEF2FC', '#003767']
 			  },
 			  defaultColor: '#f5f5f5',
@@ -150,7 +156,7 @@ class Thematic_Maps_Public {
 			chart.draw(data, options);
 		  };
 	</script>
-	<?php
+	    <?php
 	}
 
 }
