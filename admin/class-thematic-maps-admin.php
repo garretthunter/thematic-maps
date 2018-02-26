@@ -136,7 +136,7 @@ class Thematic_Maps_Admin {
 	public function initialize_plugin_options () {
 
         if( false == get_option( 'thematic_maps_options' ) ) {
-            add_option( 'thematic_maps_options', '' );
+            add_option( 'thematic_maps_options', array( 'maps_apikey' => '' ) );
         }
 
         add_settings_section(
