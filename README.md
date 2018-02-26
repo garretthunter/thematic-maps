@@ -2,10 +2,11 @@
 A WordPress plugin that displays a thematic map designed to show a particular theme connected with a specific geographic area.
 
 ## Description
-Defines a single [shortcode](https://codex.wordpress.org/Shortcode) that displays a [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) of the United States based on data saved in a [Ninja Forms form](https://ninjaforms.com). The data lookup is hardcoded while I figure out the Ninja Forms data model or select another way to save / retrieve the data.
+Defines a single [shortcode](https://codex.wordpress.org/Shortcode) that displays a [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) of the United States based on data saved in a [Ninja Forms form](https://ninjaforms.com).
+The data lookup is hardcoded while I figure out the Ninja Forms data model or select another way to save / retrieve the data.
 
 ## Screenshot
-[https://upload.wikimedia.org/wikipedia/en/2/27/Choropleth.gif]
+![Choropleth of the United States](https://upload.wikimedia.org/wikipedia/en/2/27/Choropleth.gif)
 
 ## Installation
 This section describes how to install the plugin and get it working.
