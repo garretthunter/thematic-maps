@@ -29,3 +29,5 @@
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
+
+unregister_setting('general','thematic_maps_settings_section'); delete_option('thematic_maps_options');
