@@ -106,8 +106,8 @@ class Thematic_Maps_Public {
 
 		global $wpdb;
 		$results = $wpdb->get_results( "
-			SELECT PostMeta.meta_value as state,
-				   count(*) as signatures 
+			SELECT PostMeta.meta_value as axis,
+				   count(*) as axis_count
 			FROM {$wpdb->prefix}posts Posts,
 				 {$wpdb->prefix}postmeta PostMeta
 			WHERE PostMeta.meta_key = concat ('_field_',(select id from {$wpdb->prefix}nf3_fields where `key` = 'state')) AND
@@ -115,11 +115,6 @@ class Thematic_Maps_Public {
 				  Posts.id = PostMeta.post_id AND
 				  Posts.post_status = 'publish'
 			group by PostMeta.meta_value");
-		
-		$total_signatures = 0;
-		foreach( $results as $signature ) {
-			$total_signatures += $signature->signatures;
-		}
 	    ?>
 	<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 	<div id="geochart-colors" ></div>
@@ -132,11 +127,15 @@ class Thematic_Maps_Public {
 	
 		  function drawRegionsMap() {
 			var data = google.visualization.arrayToDataTable([
-			  ['Province', 'Signatures'],
+			  ['Axis', 'Count'],
 	    <?php
-		foreach ($results as $signature)
+		foreach( $results as $result ) {
+		}
+		$total_axis_count = 0;
+		foreach ($results as $result)
 		{
-			echo sprintf ("['%s', %d],\n", $signature->state,$signature->signatures);
+			$total_axis_count += $result->axis_count;
+			echo sprintf ("['%s', %d],\n", $result->axis,$result->axis_count);
 		}
 	    ?>
 			]);
@@ -146,7 +145,7 @@ class Thematic_Maps_Public {
 			  resolution: 'provinces',
 			  colorAxis: {
 				minValue: 0,
-				maxValue: <?php echo $total_signatures; ?>,
+				maxValue: <?php echo $total_axis_count; ?>,
 				colors: ['#DEF2FC', '#003767']
 			  },
 			  defaultColor: '#f5f5f5',
