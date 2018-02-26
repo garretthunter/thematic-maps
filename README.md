@@ -6,7 +6,7 @@ Defines a single [shortcode](https://codex.wordpress.org/Shortcode) that display
 The data lookup is hardcoded while I figure out the Ninja Forms data model or select another way to save / retrieve the data.
 
 ## Screenshot
-![Choropleth of the United States](https://upload.wikimedia.org/wikipedia/en/2/27/Choropleth.gif)
+![Choropleth of the United States](https://github.com/garretthunter/thematic-maps/blob/master/choropleth-sample.png)
 
 ## Installation
 This section describes how to install the plugin and get it working.
