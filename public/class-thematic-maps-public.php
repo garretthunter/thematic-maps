@@ -32,6 +32,15 @@ class Thematic_Maps_Public {
 	private $plugin_name;
 
 	/**
+	 * The title of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $plugin_title    The string used in menus and pages to display this plugin's title.
+	 */
+	protected $plugin_title;
+
+	/**
 	 * The version of this plugin.
 	 *
 	 * @since    1.0.0
@@ -47,11 +56,12 @@ class Thematic_Maps_Public {
 	 * @param      string    $plugin_name       The name of the plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $plugin_title ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
+		$this->plugin_title = $plugin_title;
+		
 	}
 
 	/**
