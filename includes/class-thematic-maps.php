@@ -49,6 +49,15 @@ class Thematic_Maps {
 	protected $plugin_name;
 
 	/**
+	 * The title of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $plugin_title    The string used in menus and pages to display this plugin's title.
+	 */
+	protected $plugin_title;
+
+	/**
 	 * The current version of the plugin.
 	 *
 	 * @since    1.0.0
@@ -72,7 +81,8 @@ class Thematic_Maps {
 		} else {
 			$this->version = '1.0.0';
 		}
-		$this->plugin_name = 'thematic-maps';
+		$this->plugin_name = 'thematic_maps';
+		$this->plugin_title = 'Thematic Maps';
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -152,15 +162,13 @@ class Thematic_Maps {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Thematic_Maps_Admin( $this->get_plugin_name(), $this->get_version() );
+		$plugin_admin = new Thematic_Maps_Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
-		//GEHDEBUG
-//		$this->loader->add_action( 'admin_menu', $plugin_admin, 'choropleth_plugin_menu' );
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'initialize_plugin_options' );
-		//GEHDEBUG
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
 	}
 
 	/**
@@ -200,6 +208,16 @@ class Thematic_Maps {
 	 */
 	public function get_plugin_name() {
 		return $this->plugin_name;
+	}
+
+	/**
+	 * The title of the plugin used to display across menus, pages, and text.
+	 *
+	 * @since     1.0.0
+	 * @return    string    The title of the plugin.
+	 */
+	public function get_plugin_title() {
+		return $this->plugin_title;
 	}
 
 	/**

@@ -32,6 +32,15 @@ class Thematic_Maps_Admin {
 	private $plugin_name;
 
 	/**
+	 * The title of this plugin.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      string    $plugin_title    The string used in menus and pages to display this plugin's title.
+	 */
+	protected $plugin_title;
+
+	/**
 	 * The version of this plugin.
 	 *
 	 * @since    1.0.0
@@ -47,10 +56,11 @@ class Thematic_Maps_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( $plugin_name, $version, $plugin_title ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
+		$this->plugin_title = $plugin_title;
 
 	}
 
@@ -100,32 +110,57 @@ class Thematic_Maps_Admin {
 
 	}
 
-	/**
-	 * Retrieve the options prefix of the plugin.
-	 *
-	 * @since     1.0.0
-	 * @return    string    The options prefix of the plugin.
-	 */
-	public function get_options_prefix() {
-		return strtolower( $this->plugin_name )."_";
+	public function tm_admin_menu() {
+		add_menu_page( 
+			$this->plugin_title,
+			$this->plugin_title, 
+			'manage_options', 					// Capability / Permissions
+			$this->plugin_name, 			    // Menu slug, unique, lowercase
+			array ($this, 'tm_options_page'),	// Output / render
+			'dashicons-analytics'
+		);	
 	}
 
-	public function thematic_maps_plugin_menu() {
-		add_options_page( 
-			__($this->plugin_name.' Settings', 'thematic_maps_plugin'), 
-			$this->plugin_name, 
-			'administrator', 
-			'thematic_maps_plugin', 
-			array ($this, 'thematic_maps_options'));
+	public function tm_settings_init () {
+
+		if( false == get_option( $this->plugin_name.'_plugin' ) ) {
+            add_option( $this->plugin_name.'_plugin', array( 'maps_apikey' => '' ) );
+        }
+
+        add_settings_section(
+            $this->plugin_name.'_settings',			                // ID used to identify this section and with which to register options
+            __( $this->plugin_title.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+            array( $this, 'settings_description_callback'),	        // Callback used to render the description of the section
+            $this->plugin_name		                // Page on which to add this section of options
+        );
+
+        add_settings_field(
+            'option_maps_apikey',						        // ID used to identify the field throughout the theme
+            __( 'Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
+            $this->plugin_name,	            // The page on which this option will be displayed
+            $this->plugin_name.'_settings',			        // The name of the section to which this field belongs
+            array(								        // The array of arguments to pass to the callback. In this case, just a description.
+                __( 'Provided by the Google Developer\'s console', $this->plugin_name.'_plugin' ),
+            )
+        );
+
+        register_setting(
+            $this->plugin_name.'_settings',					// Settings group name
+			$this->plugin_name.'_plugin',						// Option to save
+			array( $this, 'validate_options')   // Sanitize callback
+        );
+
 	}
 
-	public function thematic_maps_options() 
-	{ ?>
+	public function tm_options_page() 
+	{   ?>
         <div class="wrap">
 			<form method="post" action="options.php">
 				<?php 
-				do_settings_sections( 'thematic_maps_options');
         	    settings_errors();
+				settings_fields( $this->plugin_name.'_settings' );
+				do_settings_sections( $this->plugin_name);
                 submit_button();
                 ?>
             </form>
@@ -133,44 +168,12 @@ class Thematic_Maps_Admin {
         <?php
     }
 	
-	public function initialize_plugin_options () {
-
-        if( false == get_option( 'thematic_maps_options' ) ) {
-            add_option( 'thematic_maps_options', array( 'maps_apikey' => '' ) );
-        }
-
-        add_settings_section(
-            'thematic_maps_settings_section',			                // ID used to identify this section and with which to register options
-            __( $this->plugin_name.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
-            array( $this, 'settings_description_callback'),	        // Callback used to render the description of the section
-            'general'		                // Page on which to add this section of options
-        );
-
-        add_settings_field(
-            'option_maps_apikey',						        // ID used to identify the field throughout the theme
-            __( 'Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
-            'general',	            // The page on which this option will be displayed
-            'thematic_maps_settings_section',			        // The name of the section to which this field belongs
-            array(								        // The array of arguments to pass to the callback. In this case, just a description.
-                __( 'Provided from your Google Developer\'s console', 'thematic_maps_plugin' ),
-            )
-        );
-
-        register_setting(
-            'general',
-			'thematic_maps_options',
-			array( $this, 'validate_options')
-        );
-
-	}
-
     public function settings_description_callback () {
 
         /**
          * Add an echo here to output text at the top of the API settings page
          */
-		echo "$this->plugin_name uses the Google GeoCharts which requires mapsApiKey for your project.<br />";
+		echo "$this->plugin_title uses the Google GeoCharts which requires mapsApiKey for your project.<br />";
 		echo "See <a target=\"_blank\" href=\"https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings\">https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings</a>";
 
 	}	
@@ -183,9 +186,9 @@ class Thematic_Maps_Admin {
      */
 	public function maps_apikey_option_callback ( $messages ) {
 
-		$options = get_option('thematic_maps_options');
+		$options = get_option($this->plugin_name.'_plugin');
         ?>
-            <input type="text" name="thematic_maps_options[maps_apikey]" value="<?php echo esc_attr($options['maps_apikey']); ?>" maxlength="255" size="40"/>
+            <input type="text" name="<?php echo $this->plugin_name; ?>_plugin[maps_apikey]" value="<?php echo esc_attr($options['maps_apikey']); ?>" maxlength="255" size="40"/>
             <?php echo $messages[0];
 
 	}	
@@ -200,16 +203,25 @@ class Thematic_Maps_Admin {
      */
     public function validate_options( $input ) {
 
-        $output = array();
+		/**
+		 * Save the orginal options until the input is validated
+		 */
+		$current_options = get_option($this->plugin_name.'_plugin');
+		$new_options = array();
 
 		foreach( $input as $key => $val ) {
-            if( isset ( $input[$key] ) ) {
-                $output[$key] = strip_tags( stripslashes( $input[$key] ) );
-            } // end if
-        } // end foreach
-        // Return the new collection
-        return apply_filters( 'validate_options', $output, $input );
+            if( !empty ( trim($input[$key]) ) ) {
+                $new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
+            } else {
+				add_settings_error(
+					$this->plugin_name.'_plugin',
+					$key,
+					'Please enter a valid API Key to continue',
+					'error' );
+				$new_options = $current_options;
+			}
+        } 
+        return apply_filters( 'validate_options', $new_options, $input );
     } // end validate_options
-
 	
 }
