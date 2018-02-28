@@ -167,6 +167,9 @@ class Thematic_Maps {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
+		/**
+		 * Admin settings page and options
+		 */
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
 	}
