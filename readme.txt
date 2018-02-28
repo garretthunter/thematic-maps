@@ -5,8 +5,8 @@ Requires at least: 4.0.0
 Tested up to: 4.9.4
 Requires PHP: 5.0.0
 Stable tag: trunk
-License: GPL 2.0+
-License URI: http://www.gnu.org/licenses/gpl-2.0.txt
+License: GPL 3.0+
+License URI: http://www.gnu.org/licenses/gpl-3.0.txt
 
 Displays a thematic (choropleth) map of the United States of America that shows each state shaded in proportion to the measurement of the statistical variable being displayed on the map, such as population density or per-capita income. This plugin requires the Ninja Forms plugin.
 

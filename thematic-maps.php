@@ -19,15 +19,15 @@
  * Version:           1.0.0
  * Author:            Garrett Hunter
  * Author URI:        https://github.com/garretthunter
- * License:           GPL-2.0+
- * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
+ * License:           GPL-3.0+
+ * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
  * Text Domain:       thematic-maps
  * Domain Path:       /languages
  */
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-	die;
+    die;
 }
 
 /**
@@ -42,8 +42,8 @@ define( 'PLUGIN_NAME_VERSION', '1.0.0' );
  * This action is documented in includes/class-thematic-maps-activator.php
  */
 function activate_thematic_maps() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-thematic-maps-activator.php';
-	Thematic_Maps_Activator::activate();
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-thematic-maps-activator.php';
+    Thematic_Maps_Activator::activate();
 }
 
 /**
@@ -51,8 +51,8 @@ function activate_thematic_maps() {
  * This action is documented in includes/class-thematic-maps-deactivator.php
  */
 function deactivate_thematic_maps() {
-	require_once plugin_dir_path( __FILE__ ) . 'includes/class-thematic-maps-deactivator.php';
-	Thematic_Maps_Deactivator::deactivate();
+    require_once plugin_dir_path( __FILE__ ) . 'includes/class-thematic-maps-deactivator.php';
+    Thematic_Maps_Deactivator::deactivate();
 }
 
 register_activation_hook( __FILE__, 'activate_thematic_maps' );
@@ -75,8 +75,8 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-thematic-maps.php';
  */
 function run_thematic_maps() {
 
-	$plugin = new Thematic_Maps();
-	$plugin->run();
+    $plugin = new Thematic_Maps();
+    $plugin->run();
 
 }
 run_thematic_maps();
