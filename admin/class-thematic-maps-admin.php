@@ -122,7 +122,7 @@ class Thematic_Maps_Admin {
 
         $defaults = array(
             'maps_apikey'      => '',
-			'nf_form'          => '',
+			'nf_form_id'       => '',
 			'nf_field'         => '',
 			'ca_default_color' => '#f5f5f5',
 			'ca_min_color'     => '#DEF2FC',
@@ -171,9 +171,9 @@ class Thematic_Maps_Admin {
 		 * Ninja Forms form selector
 		 */
         add_settings_field(
-            'option_nf_form',						        // ID used to identify the field throughout the theme
+            'option_nf_form_id',						        // ID used to identify the field throughout the theme
             __( 'Ninja Form', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'nf_form_option_callback'),	// The name of the function responsible for rendering the option interface
+            array( $this, 'nf_form_id_option_callback'),	// The name of the function responsible for rendering the option interface
             $this->plugin_name,	            // The page on which this option will be displayed
             $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
         );
@@ -277,7 +277,7 @@ class Thematic_Maps_Admin {
      * It's called from the 'initialize_plugin_options' function by being passed as a parameter
      * in the add_settings_section function.
      */
-	public function nf_form_option_callback ( $messages ) {
+	public function nf_form_id_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
 		global $wpdb;
@@ -290,10 +290,10 @@ class Thematic_Maps_Admin {
 		if( empty( $results ) ) {
 			echo __('You must install the Ninja Forms plugin and create a form before using this plugin.', $this->plugin_name);
 		} else { ?>
-			<select name="<?php echo $this->plugin_name; ?>_plugin[nf_form]">
+			<select name="<?php echo $this->plugin_name; ?>_plugin[nf_form_id]">
 				<option value=""></option> <?php
 			foreach( $results as $form ) { ?>
-				<option value="<?php echo $form->id; ?>"<?php if (!strcasecmp($form->title, $options['nf_form'])) :?> SELECTED <?php endif ?>><?php echo esc_attr($form->title); ?></option> <?php
+				<option value="<?php echo $form->id; ?>"<?php if ( $form->id === $options['nf_form_id'] ) :?> SELECTED <?php endif ?>><?php echo esc_attr($form->title); ?></option> <?php
 			} ?>
 			</select> <?php 
 		}
@@ -384,7 +384,7 @@ class Thematic_Maps_Admin {
 							__('Please enter a valid API Key to continue.', $this->plugin_name),
 							'error' );
 						break;
-					case 'nf_form':
+					case 'nf_form_id':
 						add_settings_error(
 							$this->plugin_name.'_plugin',
 							$key,
