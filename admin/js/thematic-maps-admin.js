@@ -29,4 +29,9 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+     // Add Color Picker to all inputs that have 'color-field' class
+	 $(function() {
+		$('.tm-color-picker').wpColorPicker();
+	});
+
 })( jQuery );

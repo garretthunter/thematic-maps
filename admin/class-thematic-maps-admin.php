@@ -110,6 +110,28 @@ class Thematic_Maps_Admin {
 
 	}
 
+	/**
+     * Set default values for the plugin options.
+     *
+	 * @since 1.0.0
+	 * 
+     * @return array
+     */
+    public function set_default_options()
+    {
+
+        $defaults = array(
+            'maps_apikey'      => '',
+			'nf_form'          => '',
+			'nf_field'         => '',
+			'ca_default_color' => '#f5f5f5',
+			'ca_min_color'     => '#DEF2FC',
+			'ca_max_color'     => '#003767',
+        );
+
+        return $defaults;
+	}
+	
 	public function tm_admin_menu() {
 		add_menu_page( 
 			$this->plugin_title,
@@ -124,7 +146,7 @@ class Thematic_Maps_Admin {
 	public function tm_settings_init () {
 
 		if( false == get_option( $this->plugin_name.'_plugin' ) ) {
-            add_option( $this->plugin_name.'_plugin', array( 'maps_apikey' => '' ) );
+            add_option( $this->plugin_name.'_plugin', $this->set_default_options() );
         }
 
         add_settings_section(
@@ -134,15 +156,73 @@ class Thematic_Maps_Admin {
             $this->plugin_name		                // Page on which to add this section of options
         );
 
+		/**
+		 * Google Maps API Key
+		 */
         add_settings_field(
             'option_maps_apikey',						        // ID used to identify the field throughout the theme
-            __( 'Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            __( 'Google Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
             array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
             $this->plugin_name,	            // The page on which this option will be displayed
-            $this->plugin_name.'_settings',			        // The name of the section to which this field belongs
-            array(								        // The array of arguments to pass to the callback. In this case, just a description.
-                __( 'Provided by the Google Developer\'s console', $this->plugin_name.'_plugin' ),
+            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+        );
+
+		/**
+		 * Ninja Forms form selector
+		 */
+        add_settings_field(
+            'option_nf_form',						        // ID used to identify the field throughout the theme
+            __( 'Ninja Form', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            array( $this, 'nf_form_option_callback'),	// The name of the function responsible for rendering the option interface
+            $this->plugin_name,	            // The page on which this option will be displayed
+            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+        );
+
+		/**
+		 * Ninja Form Field to measure
+		 */
+        add_settings_field(
+            'option_nf_field',						        // ID used to identify the field throughout the theme
+            __( 'Ninja Form Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            array( $this, 'nf_field_option_callback'),	// The name of the function responsible for rendering the option interface
+            $this->plugin_name,	            // The page on which this option will be displayed
+			$this->plugin_name.'_settings',			        // The name of the section to which this field belongs
+			array(								        // The array of arguments to pass to the callback. In this case, just a description.
+                __( 'Must match the exact label of the form field to measure.', $this->plugin_name.'plugin' ),
             )
+         );
+
+		/**
+		 * Color Axis Min Color
+		 */
+        add_settings_field(
+            'option_ca_min_color',						        // ID used to identify the field throughout the theme
+            __( 'Color Axis Min Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            array( $this, 'ca_min_color_option_callback'),	// The name of the function responsible for rendering the option interface
+            $this->plugin_name,	            // The page on which this option will be displayed
+            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+        );
+
+		/**
+		 * Color Axis Max Color
+		 */
+        add_settings_field(
+            'option_ca_min_value',						        // ID used to identify the field throughout the theme
+            __( 'Color Axis Max Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            array( $this, 'ca_max_color_option_callback'),	// The name of the function responsible for rendering the option interface
+            $this->plugin_name,	            // The page on which this option will be displayed
+            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+        );
+
+		/**
+		 * Color Axis Default Color
+		 */
+        add_settings_field(
+            'option_ca_default_value',						        // ID used to identify the field throughout the theme
+            __( 'Color Axis Default Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            array( $this, 'ca_default_color_option_callback'),	// The name of the function responsible for rendering the option interface
+            $this->plugin_name,	            // The page on which this option will be displayed
+            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
         );
 
         register_setting(
@@ -173,8 +253,6 @@ class Thematic_Maps_Admin {
         /**
          * Add an echo here to output text at the top of the API settings page
          */
-		echo "$this->plugin_title uses the Google GeoCharts which requires mapsApiKey for your project.<br />";
-		echo "See <a target=\"_blank\" href=\"https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings\">https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings</a>";
 
 	}	
 
@@ -189,8 +267,92 @@ class Thematic_Maps_Admin {
 		$options = get_option($this->plugin_name.'_plugin');
         ?>
             <input type="text" name="<?php echo $this->plugin_name; ?>_plugin[maps_apikey]" value="<?php echo esc_attr($options['maps_apikey']); ?>" maxlength="255" size="40"/>
-            <?php echo $messages[0];
+            <?php echo "Get your API key at <a target=\"_blank\" href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">Google</a>";
 
+	}	
+
+    /**
+     * This function renders the Ninja Form selection option
+     *
+     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+     * in the add_settings_section function.
+     */
+	public function nf_form_option_callback ( $messages ) {
+
+		$options = get_option($this->plugin_name.'_plugin');
+		global $wpdb;
+		$results = $wpdb->get_results( "
+			SELECT forms.id,
+				   forms.title
+			FROM {$wpdb->prefix}nf3_forms forms
+			order by forms.title");
+
+		if( empty( $results ) ) {
+			echo __('You must install the Ninja Forms plugin and create a form before using this plugin.', $this->plugin_name);
+		} else { ?>
+			<select name="<?php echo $this->plugin_name; ?>_plugin[nf_form]">
+				<option value=""></option> <?php
+			foreach( $results as $form ) { ?>
+				<option value="<?php echo $form->id; ?>"<?php if (!strcasecmp($form->title, $options['nf_form'])) :?> SELECTED <?php endif ?>><?php echo esc_attr($form->title); ?></option> <?php
+			} ?>
+			</select> <?php 
+		}
+        echo $messages[0];
+
+	}	
+
+    /**
+     * This function renders the Ninja Form Field option
+     *
+     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+     * in the add_settings_section function.
+     */
+	public function nf_field_option_callback ( $messages ) {
+
+		$options = get_option($this->plugin_name.'_plugin');
+        ?>
+            <input type="text" name="<?php echo $this->plugin_name; ?>_plugin[nf_field]" value="<?php echo esc_attr($options['nf_field']); ?>" maxlength="10" size="15"/>
+            <?php echo $messages[0];
+	}	
+
+    /**
+     * This function renders the Color Axis Min Color option
+     *
+     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+     * in the add_settings_section function.
+     */
+	public function ca_min_color_option_callback ( $messages ) {
+
+		$options = get_option($this->plugin_name.'_plugin');
+        echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_min_color]" value="' . esc_attr($options['ca_min_color']) . '" maxlength="7" size="10"/>';
+	}	
+
+    /**
+     * This function renders the Color Axis Max Color option
+     *
+     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+     * in the add_settings_section function.
+     */
+	public function ca_max_color_option_callback ( $messages ) {
+
+		$options = get_option($this->plugin_name.'_plugin');
+        ?>
+            <input type="text" class="tm-color-picker" name="<?php echo $this->plugin_name; ?>_plugin[ca_max_color]" value="<?php echo esc_attr($options['ca_max_color']); ?>" maxlength="7" size="10"/>
+            <?php echo $messages[0];
+	}	
+
+    /**
+     * This function renders the Color Axis Default Color option
+     *
+     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+     * in the add_settings_section function.
+     */
+	public function ca_default_color_option_callback ( $messages ) {
+
+		$options = get_option($this->plugin_name.'_plugin');
+        ?>
+            <input type="text" class="tm-color-picker" name="<?php echo $this->plugin_name; ?>_plugin[ca_default_color]" value="<?php echo esc_attr($options['ca_default_color']); ?>" maxlength="7" size="10"/>
+            <?php echo $messages[0];
 	}	
 
     /**
@@ -209,19 +371,38 @@ class Thematic_Maps_Admin {
 		$current_options = get_option($this->plugin_name.'_plugin');
 		$new_options = array();
 
+		print_r( $input );
 		foreach( $input as $key => $val ) {
             if( !empty ( trim($input[$key]) ) ) {
                 $new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
             } else {
-				add_settings_error(
-					$this->plugin_name.'_plugin',
-					$key,
-					'Please enter a valid API Key to continue',
-					'error' );
-				$new_options = $current_options;
+				switch( $key ) {
+					case 'maps_apikey':
+						add_settings_error(
+							$this->plugin_name.'_plugin',
+							$key,
+							__('Please enter a valid API Key to continue.', $this->plugin_name),
+							'error' );
+						break;
+					case 'nf_form':
+						add_settings_error(
+							$this->plugin_name.'_plugin',
+							$key,
+							__('Please select a Ninja Form.', $this->plugin_name),
+							'error' );
+						break;
+					case 'nf_field':
+						add_settings_error(
+							$this->plugin_name.'_plugin',
+							$key,
+							__('Please enter Ninja Form Field.', $this->plugin_name),
+							'error' );
+						break;
+				}
+				$new_options[$key] = $current_options[$key];
 			}
         } 
         return apply_filters( 'validate_options', $new_options, $input );
     } // end validate_options
-	
+
 }

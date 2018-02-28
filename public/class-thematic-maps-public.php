@@ -120,7 +120,11 @@ class Thematic_Maps_Public {
 				   count(*) as axis_count
 			FROM {$wpdb->prefix}posts Posts,
 				 {$wpdb->prefix}postmeta PostMeta
-			WHERE PostMeta.meta_key = concat ('_field_',(select id from {$wpdb->prefix}nf3_fields where `key` = 'state')) AND
+			WHERE PostMeta.meta_key = concat ('_field_',(
+				  select id 
+					from {$wpdb->prefix}nf3_fields 
+				  where `label` = '{$this->get_plugin_option('nf_field')}' AND 
+				        `parent_id` = '{$this->get_plugin_option('nf_form')}' )) AND
 				  Posts.post_type='nf_sub' AND
 				  Posts.id = PostMeta.post_id AND
 				  Posts.post_status = 'publish'
@@ -156,7 +160,7 @@ class Thematic_Maps_Public {
 			  colorAxis: {
 				minValue: 0,
 				maxValue: <?php echo $total_axis_count; ?>,
-				colors: ['#DEF2FC', '#003767']
+				colors: ['<?php echo $this->get_plugin_option('ca_min_color'); ?>', '<?php echo $this->get_plugin_option('ca_max_color'); ?>']
 			  },
 			  defaultColor: '#f5f5f5',
 			};
@@ -166,6 +170,16 @@ class Thematic_Maps_Public {
 		  };
 	</script>
 	    <?php
+	}
+
+	public function get_plugin_option( $option = '' ) {
+
+		$plugin_options = get_option( $this->plugin_name.'_plugin' );
+		if( false == $plugin_options ) {
+            return null;
+        } 
+
+		return $plugin_options[$option];
 	}
 
 }
