@@ -76,8 +76,8 @@ class Thematic_Maps {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'PLUGIN_NAME_VERSION' ) ) {
-			$this->version = PLUGIN_NAME_VERSION;
+		if ( defined( 'THEMATIC_MAPS_VERSION' ) ) {
+			$this->version = THEMATIC_MAPS_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}

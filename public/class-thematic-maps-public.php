@@ -124,7 +124,7 @@ class Thematic_Maps_Public {
 				  select id 
 					from {$wpdb->prefix}nf3_fields 
 				  where `label` = '{$this->get_plugin_option('nf_field')}' AND 
-				        `parent_id` = '{$this->get_plugin_option('nf_form')}' )) AND
+				        `parent_id` = '{$this->get_plugin_option('nf_form_id')}' )) AND
 				  Posts.post_type='nf_sub' AND
 				  Posts.id = PostMeta.post_id AND
 				  Posts.post_status = 'publish'
@@ -143,8 +143,6 @@ class Thematic_Maps_Public {
 			var data = google.visualization.arrayToDataTable([
 			  ['Axis', 'Count'],
 	    <?php
-		foreach( $results as $result ) {
-		}
 		$total_axis_count = 0;
 		foreach ($results as $result)
 		{
