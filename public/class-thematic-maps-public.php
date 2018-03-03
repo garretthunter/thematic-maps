@@ -160,7 +160,7 @@ class Thematic_Maps_Public {
 				maxValue: <?php echo $total_axis_count; ?>,
 				colors: ['<?php echo $this->get_plugin_option('ca_min_color'); ?>', '<?php echo $this->get_plugin_option('ca_max_color'); ?>']
 			  },
-			  defaultColor: '#f5f5f5',
+			  defaultColor: '<?php echo $this->get_plugin_option('ca_default_color'); ?>',
 			};
 	
 			var chart = new google.visualization.GeoChart(document.getElementById('geochart-colors'));
