@@ -288,7 +288,7 @@ class Thematic_Maps_Admin {
 			order by forms.title");
 
 		if( empty( $results ) ) {
-			echo __('You must install the <a href="/wp-admin/plugin-install.php?tab=search&type=term&s=ninja+forms" target="_blank">Ninja Forms</a> plugin and create a form before using this plugin.', $this->plugin_name);
+			echo __('You must install the <a href="https://wordpress.org/plugins/ninja-forms/" target="_blank">Ninja Forms</a> plugin and create a form before using this plugin.', $this->plugin_name);
 		} else { ?>
 			<select name="<?php echo $this->plugin_name; ?>_plugin[nf_form_id]">
 				<option value=""></option> <?php
