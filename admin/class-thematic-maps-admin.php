@@ -264,6 +264,9 @@ class Thematic_Maps_Admin {
      */
 	public function maps_apikey_option_callback ( $messages ) {
 
+        $continents = new Thematic_Maps_Regions();
+        print_r( $continents->get_continents());
+
 		$options = get_option($this->plugin_name.'_plugin');
         ?>
             <input type="text" name="<?php echo $this->plugin_name; ?>_plugin[maps_apikey]" value="<?php echo esc_attr($options['maps_apikey']); ?>" maxlength="255" size="40"/>

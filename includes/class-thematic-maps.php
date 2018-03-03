@@ -122,6 +122,12 @@ class Thematic_Maps {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thematic-maps-i18n.php';
 
 		/**
+		 * The class responsible for defining Google GeoMap Regions functionality
+		 * of the plugin.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thematic-maps-regions.php';
+
+		/**
 		 * The class responsible for defining all actions that occur in the admin area.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-thematic-maps-admin.php';
