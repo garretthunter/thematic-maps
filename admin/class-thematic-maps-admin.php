@@ -172,7 +172,7 @@ class Thematic_Maps_Admin {
 		 */
         add_settings_field(
             'option_nf_form_id',						        // ID used to identify the field throughout the theme
-            __( 'Ninja Form', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            __( 'Ninja Forms', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
             array( $this, 'nf_form_id_option_callback'),	// The name of the function responsible for rendering the option interface
             $this->plugin_name,	            // The page on which this option will be displayed
             $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
@@ -183,12 +183,12 @@ class Thematic_Maps_Admin {
 		 */
         add_settings_field(
             'option_nf_field',						        // ID used to identify the field throughout the theme
-            __( 'Ninja Form Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+            __( 'Ninja Forms Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
             array( $this, 'nf_field_option_callback'),	// The name of the function responsible for rendering the option interface
             $this->plugin_name,	            // The page on which this option will be displayed
 			$this->plugin_name.'_settings',			        // The name of the section to which this field belongs
 			array(								        // The array of arguments to pass to the callback. In this case, just a description.
-                __( 'Must match the exact label of the form field to measure.', $this->plugin_name.'plugin' ),
+                __( 'Ninja Forms field to measure.', $this->plugin_name.'plugin' ),
             )
          );
 
@@ -288,7 +288,7 @@ class Thematic_Maps_Admin {
 			order by forms.title");
 
 		if( empty( $results ) ) {
-			echo __('You must install the Ninja Forms plugin and create a form before using this plugin.', $this->plugin_name);
+			echo __('You must install the <a href="/wp-admin/plugin-install.php?tab=search&type=term&s=ninja+forms" target="_blank">Ninja Forms</a> plugin and create a form before using this plugin.', $this->plugin_name);
 		} else { ?>
 			<select name="<?php echo $this->plugin_name; ?>_plugin[nf_form_id]">
 				<option value=""></option> <?php
