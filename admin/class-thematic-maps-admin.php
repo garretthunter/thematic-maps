@@ -83,6 +83,8 @@ class Thematic_Maps_Admin {
 		 * class.
 		 */
 
+		// Add the color picker css file
+		wp_enqueue_style( 'wp-color-picker' );
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/thematic-maps-admin.css', array(), $this->version, 'all' );
 
 	}
@@ -105,8 +107,7 @@ class Thematic_Maps_Admin {
 		 * between the defined hooks and the functions defined in this
 		 * class.
 		 */
-
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/thematic-maps-admin.js', array( 'jquery' ), $this->version, false );
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/thematic-maps-admin.js', array( 'jquery', 'wp-color-picker' ), $this->version, false );
 
 	}
 
@@ -264,13 +265,11 @@ class Thematic_Maps_Admin {
      */
 	public function maps_apikey_option_callback ( $messages ) {
 
-        $continents = new Thematic_Maps_Regions();
-        print_r( $continents->get_continents());
-
 		$options = get_option($this->plugin_name.'_plugin');
-        ?>
-            <input type="text" name="<?php echo $this->plugin_name; ?>_plugin[maps_apikey]" value="<?php echo esc_attr($options['maps_apikey']); ?>" maxlength="255" size="40"/>
-            <?php echo "Get your API key at <a target=\"_blank\" href=\"https://developers.google.com/maps/documentation/javascript/get-api-key\">Google</a>";
+
+        echo '<input type="text" name="' . $this->plugin_name . '_plugin[maps_apikey]" value="' . esc_attr($options['maps_apikey']) . '" maxlength="255" size="40"/>';
+        echo 'Get your API key at <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
+		echo $messages[0];
 
 	}	
 
@@ -313,9 +312,8 @@ class Thematic_Maps_Admin {
 	public function nf_field_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        ?>
-            <input type="text" name="<?php echo $this->plugin_name; ?>_plugin[nf_field]" value="<?php echo esc_attr($options['nf_field']); ?>" maxlength="255" size="40"/>
-            <?php echo $messages[0];
+        echo '<input type="text" name="' . $this->plugin_name . '_plugin[nf_field]" value="' . esc_attr($options['nf_field']) . '" maxlength="255" size="40"/>';
+        echo $messages[0];
 	}	
 
     /**
@@ -328,7 +326,8 @@ class Thematic_Maps_Admin {
 
 		$options = get_option($this->plugin_name.'_plugin');
         echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_min_color]" value="' . esc_attr($options['ca_min_color']) . '" maxlength="7" size="10"/>';
-	}	
+		echo $messages[0];
+	}
 
     /**
      * This function renders the Color Axis Max Color option
@@ -339,9 +338,8 @@ class Thematic_Maps_Admin {
 	public function ca_max_color_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        ?>
-            <input type="text" class="tm-color-picker" name="<?php echo $this->plugin_name; ?>_plugin[ca_max_color]" value="<?php echo esc_attr($options['ca_max_color']); ?>" maxlength="7" size="10"/>
-            <?php echo $messages[0];
+        echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_max_color]" value="' . esc_attr($options['ca_max_color']) . '" maxlength="7" size="10"/>';
+        echo $messages[0];
 	}	
 
     /**
@@ -353,9 +351,8 @@ class Thematic_Maps_Admin {
 	public function ca_default_color_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        ?>
-            <input type="text" class="tm-color-picker" name="<?php echo $this->plugin_name; ?>_plugin[ca_default_color]" value="<?php echo esc_attr($options['ca_default_color']); ?>" maxlength="7" size="10"/>
-            <?php echo $messages[0];
+        echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_default_color]" value="' . esc_attr($options['ca_default_color']) . '" maxlength="7" size="10"/>';
+        echo $messages[0];
 	}	
 
     /**
@@ -364,7 +361,7 @@ class Thematic_Maps_Admin {
      *
      * @params	$input	The unsanitized collection of options.
      *
-     * @returns			The collection of sanitized values.
+     * @returns	$input	The collection of sanitized values.
      */
     public function validate_options( $input ) {
 
