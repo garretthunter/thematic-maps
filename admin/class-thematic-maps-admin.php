@@ -125,7 +125,7 @@ class Thematic_Maps_Admin {
             'maps_apikey'      => '',
 			'nf_form_id'       => '',
 			'nf_field'         => '',
-			'ca_default_color' => '#f5f5f5',
+			'ca_default_color' => '#F5F5F5',
 			'ca_min_color'     => '#DEF2FC',
 			'ca_max_color'     => '#003767',
         );
