@@ -20,6 +20,7 @@ The typical usage is to create a form with only the 50 states of the U.S.A, sele
 Upload the thematic-maps.zip file via `Dashboard->Plugin->Add New` and activate from the plugin menu.
 
 ## Change Log
+v1.0.1 = Plugin icon changed
 v1.0.0 - Initial Release
 
 ## Upgrade Notice

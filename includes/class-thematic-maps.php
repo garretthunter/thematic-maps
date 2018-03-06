@@ -79,7 +79,7 @@ class Thematic_Maps {
 		if ( defined( 'THEMATIC_MAPS_VERSION' ) ) {
 			$this->version = THEMATIC_MAPS_VERSION;
 		} else {
-			$this->version = '1.0.0';
+			$this->version = '1.0.1';
 		}
 		$this->plugin_name = 'thematic_maps';
 		$this->plugin_title = 'Thematic Maps';
