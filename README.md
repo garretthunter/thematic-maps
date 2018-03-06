@@ -25,10 +25,10 @@ v1.0.0 - Initial Release
 ## Upgrade Notice
 
 ## Screen Shots
-https://raw.githubusercontent.com/garretthunter/thematic-maps/master/choropleth-sample.png
+[screenshot-1.png]
 
-## Support
-https://github.com/garretthunter/thematic-maps/issues
+## Where can I get support?
+Post your support requests on [GitHub](https://github.com/garretthunter/thematic-maps/issues) 
 
 ## TO DO
-1. Replace custom Ninja Forms integration with something better
+- Replace custom Ninja Forms integration with something better
