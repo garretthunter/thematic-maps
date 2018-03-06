@@ -25,9 +25,7 @@ v1.0.0 - Initial Release
 ## Upgrade Notice
 
 ## Screenshots
+(screenshot-1.png)
 
 ## Where can I get support?
 Post your support requests on [GitHub](https://github.com/garretthunter/thematic-maps/issues) 
-
-## TO DO
-- Replace custom Ninja Forms integration with something better
