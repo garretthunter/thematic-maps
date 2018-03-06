@@ -1,23 +1,34 @@
 # Thematic Maps - A WordPress Plugin
-A WordPress plugin that displays a thematic map designed to show a particular theme connected with a specific geographic area.
+Contributors: loganfive
+Donate link: https://paypal.me/loganfive
+Tags: analytics, data, graphs, geography, choropleth
+Requires at least: 4.0.0
+Tested up to: 4.9.4
+Requires PHP: 5.6
+Stable tag: trunk
+License: GPL 3.0+
+License URI: http://www.gnu.org/licenses/gpl-3.0.txt
+
+Displays a thematic map of the United States of America showing each state shaded in proportion to the measurement of a statistical variable, such as population density or per-capita income. Requires the Ninja Forms plugin.
 
 ## Description
-Defines a single [shortcode](https://codex.wordpress.org/Shortcode) that displays a [choropleth map](https://en.wikipedia.org/wiki/Choropleth_map) of the United States based on data saved in a [Ninja Forms form](https://ninjaforms.com).
-The data lookup is hardcoded while I figure out the Ninja Forms data model or select another way to save / retrieve the data.
+Thematic Maps displays a map of the United States of America shaded in proportion to the measurement of the statistical variable being displayed on the map, such as population density or per-capita income. It uses data gathered from a Ninja Forms form of your choice and displays the map via a shortcode on the page or post of your choice.
 
-## Screenshot
-![Choropleth of the United States](https://github.com/garretthunter/thematic-maps/blob/master/choropleth-sample.png)
+The typical usage is to create a form with only the 50 states of the U.S.A, select that form title from the Thematic Maps admin menu, customize the colors, and insert the shortcode into your post or page.
 
 ## Installation
-This section describes how to install the plugin and get it working.
+Upload the thematic-maps.zip file via `Dashboard->Plugin->Add New` and activate from the plugin menu.
 
-1. Upload the thematic-maps directory to your /wp-content/plugins/ directory.
-2. Activate the plugin through the 'Plugins' menu in WordPress.
-3. Navigate to your WordPress admin Dashboard and under Settings->General update the "Maps API Key" option with your [Google Maps API Key](https://developers.google.com/chart/interactive/docs/basic_load_libs#load-settings) from your Google Developer's console
+## Change Log
+v1.0.0 - Initial Release
 
-## Use
-Reverse engineer the Ninja Form form field you want to report out and update the query in (the file name).
-Insert the shortcode \[thematic_maps\] into your post or page of choice.
+## Upgrade Notice
+
+## Screen Shots
+https://raw.githubusercontent.com/garretthunter/thematic-maps/master/choropleth-sample.png
+
+## Support
+https://github.com/garretthunter/thematic-maps/issues
 
 ## TO DO
-1. Replace db hardcode with something better
+1. Replace custom Ninja Forms integration with something better
