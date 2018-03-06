@@ -24,7 +24,7 @@ v1.0.0 - Initial Release
 
 ## Upgrade Notice
 
-# Screenshots
+## Screenshots
 (screenshot-1.png)
 
 ## Where can I get support?
