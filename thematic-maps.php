@@ -9,7 +9,7 @@
  * that starts the plugin.
  *
  * @link              https://github.com/garretthunter
- * @since             1.0.
+ * @since             1.0.0
  * @package           Thematic_Maps
  *
  * @wordpress-plugin
