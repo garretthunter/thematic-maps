@@ -29,4 +29,4 @@ Sample output from the shortcode
 Admin options
 
 ## Where can I get support?
-Post your support requests on [GitHub](https://github.com/garretthunter/thematic-maps/issues) 
+Post your support requests our [GitHub](https://github.com/garretthunter/thematic-maps/issues) issues log 
