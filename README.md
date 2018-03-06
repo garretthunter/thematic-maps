@@ -25,7 +25,8 @@ v1.0.0 - Initial Release
 ## Upgrade Notice
 
 ## Screenshots
-(screenshot-1.png)
+Sample output from the shortcode
+Admin options
 
 ## Where can I get support?
 Post your support requests on [GitHub](https://github.com/garretthunter/thematic-maps/issues) 
