@@ -1,4 +1,4 @@
-# Thematic Maps - A WordPress Plugin
+# Thematic Maps
 Contributors: loganfive
 Donate link: https://paypal.me/loganfive
 Tags: analytics, data, graphs, geography, choropleth
@@ -24,8 +24,7 @@ v1.0.0 - Initial Release
 
 ## Upgrade Notice
 
-## Screen Shots
-[screenshot-1.png]
+## Screenshots
 
 ## Where can I get support?
 Post your support requests on [GitHub](https://github.com/garretthunter/thematic-maps/issues) 
