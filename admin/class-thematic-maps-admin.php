@@ -142,7 +142,7 @@ class Thematic_Maps_Admin {
 	 */
 	public function add_settings_link( $links ) {
 
-	    $settings_link = '<a href="/wp-admin/admin.php?page=' . $this->plugin_name . '">' . __( 'Settings', $this->plugin_name ) . '</a>';
+	    $settings_link = '<a href="admin.php?page=' . $this->plugin_name . '">' . __( 'Settings', $this->plugin_name ) . '</a>';
 	    array_unshift( $links, $settings_link );
 
 	    return $links;
