@@ -79,7 +79,7 @@ class Thematic_Maps {
 		if ( defined( 'THEMATIC_MAPS_VERSION' ) ) {
 			$this->version = THEMATIC_MAPS_VERSION;
 		} else {
-			$this->version = '1.0.1';
+			$this->version = '1.0.2';
 		}
 		$this->plugin_name = 'thematic_maps';
 		$this->plugin_title = 'Thematic Maps';
@@ -172,6 +172,8 @@ class Thematic_Maps {
 		 */
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
+
+		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'add_settings_link' );
 	}
 
 	/**

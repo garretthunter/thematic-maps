@@ -133,6 +133,21 @@ class Thematic_Maps_Admin {
         return $defaults;
 	}
 	
+	/**
+	 * Add a Setting link to WordPress plugin list page
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return array
+	 */
+	public function add_settings_link( $links ) {
+
+	    $settings_link = '<a href="/wp-admin/admin.php?page=' . $this->plugin_name . '">' . __( 'Settings', $this->plugin_name ) . '</a>';
+	    array_unshift( $links, $settings_link );
+
+	    return $links;
+    }
+
 	public function tm_admin_menu() {
 		add_menu_page( 
 			$this->plugin_title,
@@ -269,7 +284,6 @@ class Thematic_Maps_Admin {
 
         echo '<input type="text" name="' . $this->plugin_name . '_plugin[maps_apikey]" value="' . esc_attr($options['maps_apikey']) . '" maxlength="255" size="40"/>';
         echo 'Get your API key at <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
-		echo $messages[0];
 
 	}	
 
@@ -299,7 +313,6 @@ class Thematic_Maps_Admin {
 			} ?>
 			</select> <?php 
 		}
-        echo $messages[0];
 
 	}	
 
@@ -313,7 +326,6 @@ class Thematic_Maps_Admin {
 
 		$options = get_option($this->plugin_name.'_plugin');
         echo '<input type="text" name="' . $this->plugin_name . '_plugin[nf_field]" value="' . esc_attr($options['nf_field']) . '" maxlength="255" size="40"/>';
-        echo $messages[0];
 	}	
 
     /**
@@ -326,7 +338,6 @@ class Thematic_Maps_Admin {
 
 		$options = get_option($this->plugin_name.'_plugin');
         echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_min_color]" value="' . esc_attr($options['ca_min_color']) . '" maxlength="7" size="10"/>';
-		echo $messages[0];
 	}
 
     /**
@@ -339,7 +350,6 @@ class Thematic_Maps_Admin {
 
 		$options = get_option($this->plugin_name.'_plugin');
         echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_max_color]" value="' . esc_attr($options['ca_max_color']) . '" maxlength="7" size="10"/>';
-        echo $messages[0];
 	}	
 
     /**
@@ -352,7 +362,6 @@ class Thematic_Maps_Admin {
 
 		$options = get_option($this->plugin_name.'_plugin');
         echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_default_color]" value="' . esc_attr($options['ca_default_color']) . '" maxlength="7" size="10"/>';
-        echo $messages[0];
 	}	
 
     /**
