@@ -1,40 +1,118 @@
 <?php
 /**
- * Register all actions and filters for the plugin
+ * Read-only data access class for accessing Google region names and codes
  *
- * @link       https://developers.google.com/chart/interactive/docs/gallery/geochart
- * @since      1.0.0
+ * @link       https://github.com/garretthunter
+ * @since      1.1.0
  *
  * @package    Thematic_Maps
  * @subpackage Thematic_Maps/includes
  */
+
 /**
- * Help class for accessing Google region names and codes
- *
- * Maintain the list of all Google GeoMap region codes and names
- * along with access methods
+ * Read-only data access class for accessing Google region names and codes
  *
  * @package    Thematic_Maps
  * @subpackage Thematic_Maps/includes
  * @author     Garrett Hunter <garrett.hunter@blacktower.com>
  */
-class Thematic_Maps_Regions {
+class Thematic_Maps_Region {
+
 	/**
-	 * The list of Google GeoMap regions
+	 * Database primary key
 	 *
-	 * @since    1.1.0
-	 * @access   protected
-	 * @var      Thematic_Maps_Regions    $region    Holds list of all valid region codes.
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $id  Database primary key
 	 */
-	protected $region;
+	private $id;
+
+	/**
+	 * ISO 3166 continent name
+	 *
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $region_code  ISO 3166 continent name
+	 */
+	private $continent_name;
+
+	/**
+	 * ISO 3166 three digit continent code
+	 *
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $region_code  ISO 3166 three digit continent code
+	 */
+	private $continent_code;
+
+	/**
+	 * ISO 3166 sub-continent name
+	 *
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $region_code  ISO 3166 sub-continent name
+	 */
+	private $sub_continent_name;
+
+	/**
+	 * ISO 3166 three digit sub-continent code
+	 *
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $sub_continent_code  ISO 3166 three digit sub-continent code
+	 */
+	private $sub_continent_code;
+
+	/**
+	 * ISO 3166 country name
+	 *
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $country_name  ISO 3166 country name
+	 */
+	private $country_name;
+
+	/**
+	 * ISO 3166 alpha-2 country code
+	 *
+	 * @since   1.1.0
+	 * @access  private
+	 * @var     string   $country_code  ISO 3166 alpha-2 country code
+	 */
+	private $country_code;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
-	 * @since    1.1.0
-	 * @param      string    $plugin_name       The name of the plugin.
-	 * @param      string    $version    The version of this plugin.
+	 * @since   1.1.0
+	 * @param   string  $region_type    The type of region to be instantiated
 	 */
-	public function __construct( ) {
+	public function __construct( $region_type = '' ) {
+
+		switch ( $region_type ) {
+			case 'continent':
+				/**
+				 * Get the list of all continents
+				 * Use Case: I want to select one continent from a list of all continents
+				 */
+				break;
+			case 'sub-continent':
+				/**
+				 * Get the list of all sub-continents
+				 * Use Case: I want to select one sub-continent from a list of all sub-continents
+				 */
+				break;
+			case 'country':
+				/**
+				 * Get the list of all countries
+				 * USe Case: I want to select one country from a list of all countries
+				 */
+				break;
+		}
+
+		/**
+		 * Nothing to do unless the "new is to get the list of things"
+		 */
 		$this->region = array();
 	}
 
