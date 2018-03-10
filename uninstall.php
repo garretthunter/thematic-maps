@@ -30,4 +30,6 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
+global $wpdb;
+$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tm_iso_regions");
 unregister_setting('thematic_maps_settings','thematic_maps_plugin'); delete_option('thematic_maps_plugin');

@@ -112,157 +112,172 @@ class Thematic_Maps_Admin {
 	}
 
 	/**
-     * Set default values for the plugin options.
-     *
+	 * Set default values for the plugin options.
+	 *
 	 * @since 1.0.0
-	 * 
-     * @return array
-     */
-    public function set_default_options()
-    {
+	 *
+	 * @return array
+	 */
+	public function set_default_options()
+	{
 
-        $defaults = array(
-            'maps_apikey'      => '',
+		$defaults = array(
+			'maps_apikey'      => '',
 			'nf_form_id'       => '',
 			'nf_field'         => '',
 			'ca_default_color' => '#F5F5F5',
 			'ca_min_color'     => '#DEF2FC',
 			'ca_max_color'     => '#003767',
-        );
+		);
 
-        return $defaults;
+		return $defaults;
 	}
-	
+
+	/**
+	 * Add a Setting link to WordPress plugin list page
+	 *
+	 * @since 1.0.2
+	 *
+	 * @return array
+	 */
+	public function add_settings_link( $links ) {
+
+		$settings_link = '<a href="/wp-admin/admin.php?page=' . $this->plugin_name . '">' . __( 'Settings', $this->plugin_name ) . '</a>';
+		array_unshift( $links, $settings_link );
+
+		return $links;
+	}
+
 	public function tm_admin_menu() {
-		add_menu_page( 
+		add_menu_page(
 			$this->plugin_title,
-			$this->plugin_title, 
+			$this->plugin_title,
 			'manage_options', 					// Capability / Permissions
 			$this->plugin_name, 			    // Menu slug, unique, lowercase
 			array ($this, 'tm_options_page'),	// Output / render
 			'dashicons-analytics'
-		);	
+		);
 	}
 
 	public function tm_settings_init () {
 
 		if( false == get_option( $this->plugin_name.'_plugin' ) ) {
-            add_option( $this->plugin_name.'_plugin', $this->set_default_options() );
-        }
+			add_option( $this->plugin_name.'_plugin', $this->set_default_options() );
+		}
 
-        add_settings_section(
-            $this->plugin_name.'_settings',			                // ID used to identify this section and with which to register options
-            __( $this->plugin_title.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
-            array( $this, 'settings_description_callback'),	        // Callback used to render the description of the section
-            $this->plugin_name		                // Page on which to add this section of options
-        );
+		add_settings_section(
+			$this->plugin_name.'_settings',			                // ID used to identify this section and with which to register options
+			__( $this->plugin_title.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+			array( $this, 'settings_description_callback'),	        // Callback used to render the description of the section
+			$this->plugin_name		                // Page on which to add this section of options
+		);
 
 		/**
 		 * Google Maps API Key
 		 */
-        add_settings_field(
-            'option_maps_apikey',						        // ID used to identify the field throughout the theme
-            __( 'Google Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
-            $this->plugin_name,	            // The page on which this option will be displayed
-            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
-        );
+		add_settings_field(
+			'option_maps_apikey',						        // ID used to identify the field throughout the theme
+			__( 'Google Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+			array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
+			$this->plugin_name,	            // The page on which this option will be displayed
+			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+		);
 
 		/**
 		 * Ninja Forms form selector
 		 */
-        add_settings_field(
-            'option_nf_form_id',						        // ID used to identify the field throughout the theme
-            __( 'Ninja Forms', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'nf_form_id_option_callback'),	// The name of the function responsible for rendering the option interface
-            $this->plugin_name,	            // The page on which this option will be displayed
-            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
-        );
+		add_settings_field(
+			'option_nf_form_id',						        // ID used to identify the field throughout the theme
+			__( 'Ninja Forms', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+			array( $this, 'nf_form_id_option_callback'),	// The name of the function responsible for rendering the option interface
+			$this->plugin_name,	            // The page on which this option will be displayed
+			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+		);
 
 		/**
 		 * Ninja Form Field to measure
 		 */
-        add_settings_field(
-            'option_nf_field',						        // ID used to identify the field throughout the theme
-            __( 'Ninja Forms Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'nf_field_option_callback'),	// The name of the function responsible for rendering the option interface
-            $this->plugin_name,	            // The page on which this option will be displayed
+		add_settings_field(
+			'option_nf_field',						        // ID used to identify the field throughout the theme
+			__( 'Ninja Forms Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+			array( $this, 'nf_field_option_callback'),	// The name of the function responsible for rendering the option interface
+			$this->plugin_name,	            // The page on which this option will be displayed
 			$this->plugin_name.'_settings',			        // The name of the section to which this field belongs
 			array(								        // The array of arguments to pass to the callback. In this case, just a description.
-                __( 'Ninja Forms field to measure.', $this->plugin_name.'plugin' ),
-            )
-         );
+				__( 'Ninja Forms field to measure.', $this->plugin_name.'plugin' ),
+			)
+		);
 
 		/**
 		 * Color Axis Min Color
 		 */
-        add_settings_field(
-            'option_ca_min_color',						        // ID used to identify the field throughout the theme
-            __( 'Color Axis Min Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'ca_min_color_option_callback'),	// The name of the function responsible for rendering the option interface
-            $this->plugin_name,	            // The page on which this option will be displayed
-            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
-        );
+		add_settings_field(
+			'option_ca_min_color',						        // ID used to identify the field throughout the theme
+			__( 'Color Axis Min Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+			array( $this, 'ca_min_color_option_callback'),	// The name of the function responsible for rendering the option interface
+			$this->plugin_name,	            // The page on which this option will be displayed
+			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+		);
 
 		/**
 		 * Color Axis Max Color
 		 */
-        add_settings_field(
-            'option_ca_min_value',						        // ID used to identify the field throughout the theme
-            __( 'Color Axis Max Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'ca_max_color_option_callback'),	// The name of the function responsible for rendering the option interface
-            $this->plugin_name,	            // The page on which this option will be displayed
-            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
-        );
+		add_settings_field(
+			'option_ca_min_value',						        // ID used to identify the field throughout the theme
+			__( 'Color Axis Max Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+			array( $this, 'ca_max_color_option_callback'),	// The name of the function responsible for rendering the option interface
+			$this->plugin_name,	            // The page on which this option will be displayed
+			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+		);
 
 		/**
 		 * Color Axis Default Color
 		 */
-        add_settings_field(
-            'option_ca_default_value',						        // ID used to identify the field throughout the theme
-            __( 'Color Axis Default Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-            array( $this, 'ca_default_color_option_callback'),	// The name of the function responsible for rendering the option interface
-            $this->plugin_name,	            // The page on which this option will be displayed
-            $this->plugin_name.'_settings'			        // The name of the section to which this field belongs
-        );
+		add_settings_field(
+			'option_ca_default_value',						        // ID used to identify the field throughout the theme
+			__( 'Color Axis Default Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
+			array( $this, 'ca_default_color_option_callback'),	// The name of the function responsible for rendering the option interface
+			$this->plugin_name,	            // The page on which this option will be displayed
+			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+		);
 
-        register_setting(
-            $this->plugin_name.'_settings',					// Settings group name
+		register_setting(
+			$this->plugin_name.'_settings',					// Settings group name
 			$this->plugin_name.'_plugin',						// Option to save
 			array( $this, 'validate_options')   // Sanitize callback
-        );
+		);
 
 	}
 
-	public function tm_options_page() 
+	public function tm_options_page()
 	{   ?>
         <div class="wrap">
-			<form method="post" action="options.php">
-				<?php 
-        	    settings_errors();
+            <form method="post" action="options.php">
+				<?php
+				settings_errors();
 				settings_fields( $this->plugin_name.'_settings' );
 				do_settings_sections( $this->plugin_name);
-                submit_button();
-                ?>
+				submit_button();
+				?>
             </form>
         </div><!-- /.wrap -->
-        <?php
-    }
-	
-    public function settings_description_callback () {
+		<?php
+	}
 
-        /**
-         * Add an echo here to output text at the top of the API settings page
-         */
+	public function settings_description_callback () {
 
-	}	
+		/**
+		 * Add an echo here to output text at the top of the API settings page
+		 */
 
-    /**
-     * This function renders the Maps API Key option
-     *
-     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
-     * in the add_settings_section function.
-     */
+	}
+
+	/**
+	 * This function renders the Maps API Key option
+	 *
+	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+	 * in the add_settings_section function.
+	 */
 	public function maps_apikey_option_callback ( $messages ) {
 
 		$continents = new Thematic_Maps_Regions();
@@ -270,18 +285,17 @@ class Thematic_Maps_Admin {
 
 		$options = get_option($this->plugin_name.'_plugin');
 
-        echo '<input type="text" name="' . $this->plugin_name . '_plugin[maps_apikey]" value="' . esc_attr($options['maps_apikey']) . '" maxlength="255" size="40"/>';
-        echo 'Get your API key at <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
-		echo $messages[0];
+		echo '<input type="text" name="' . $this->plugin_name . '_plugin[maps_apikey]" value="' . esc_attr($options['maps_apikey']) . '" maxlength="255" size="40"/>';
+		echo 'Get your API key at <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
 
-	}	
+	}
 
-    /**
-     * This function renders the Ninja Form selection option
-     *
-     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
-     * in the add_settings_section function.
-     */
+	/**
+	 * This function renders the Ninja Form selection option
+	 *
+	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+	 * in the add_settings_section function.
+	 */
 	public function nf_form_id_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
@@ -295,78 +309,73 @@ class Thematic_Maps_Admin {
 		if( empty( $results ) ) {
 			echo __('You must install the <a href="https://wordpress.org/plugins/ninja-forms/" target="_blank">Ninja Forms</a> plugin and create a form before using this plugin.', $this->plugin_name);
 		} else { ?>
-			<select name="<?php echo $this->plugin_name; ?>_plugin[nf_form_id]">
-				<option value=""></option> <?php
-			foreach( $results as $form ) { ?>
-				<option value="<?php echo $form->id; ?>"<?php if ( $form->id === $options['nf_form_id'] ) :?> SELECTED <?php endif ?>><?php echo esc_attr($form->title); ?></option> <?php
-			} ?>
-			</select> <?php 
+            <select name="<?php echo $this->plugin_name; ?>_plugin[nf_form_id]">
+                <option value=""></option> <?php
+				foreach( $results as $form ) { ?>
+                    <option value="<?php echo $form->id; ?>"<?php if ( $form->id === $options['nf_form_id'] ) :?> SELECTED <?php endif ?>><?php echo esc_attr($form->title); ?></option> <?php
+				} ?>
+            </select> <?php
 		}
-        echo $messages[0];
 
-	}	
+	}
 
-    /**
-     * This function renders the Ninja Form Field option
-     *
-     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
-     * in the add_settings_section function.
-     */
+	/**
+	 * This function renders the Ninja Form Field option
+	 *
+	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+	 * in the add_settings_section function.
+	 */
 	public function nf_field_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        echo '<input type="text" name="' . $this->plugin_name . '_plugin[nf_field]" value="' . esc_attr($options['nf_field']) . '" maxlength="255" size="40"/>';
-        echo $messages[0];
-	}	
+		echo '<input type="text" name="' . $this->plugin_name . '_plugin[nf_field]" value="' . esc_attr($options['nf_field']) . '" maxlength="255" size="40"/>';
+	}
 
-    /**
-     * This function renders the Color Axis Min Color option
-     *
-     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
-     * in the add_settings_section function.
-     */
+	/**
+	 * This function renders the Color Axis Min Color option
+	 *
+	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+	 * in the add_settings_section function.
+	 */
 	public function ca_min_color_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_min_color]" value="' . esc_attr($options['ca_min_color']) . '" maxlength="7" size="10"/>';
-		echo $messages[0];
+		echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_min_color]" value="' . esc_attr($options['ca_min_color']) . '" maxlength="7" size="10"/>';
 	}
 
-    /**
-     * This function renders the Color Axis Max Color option
-     *
-     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
-     * in the add_settings_section function.
-     */
+	/**
+	 * This function renders the Color Axis Max Color option
+	 *
+	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+	 * in the add_settings_section function.
+	 */
 	public function ca_max_color_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_max_color]" value="' . esc_attr($options['ca_max_color']) . '" maxlength="7" size="10"/>';
-        echo $messages[0];
-	}	
+		echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_max_color]" value="' . esc_attr($options['ca_max_color']) . '" maxlength="7" size="10"/>';
+	}
 
-    /**
-     * This function renders the Color Axis Default Color option
-     *
-     * It's called from the 'initialize_plugin_options' function by being passed as a parameter
-     * in the add_settings_section function.
-     */
+	/**
+	 * This function renders the Color Axis Default Color option
+	 *
+	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
+	 * in the add_settings_section function.
+	 */
 	public function ca_default_color_option_callback ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
-        echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_default_color]" value="' . esc_attr($options['ca_default_color']) . '" maxlength="7" size="10"/>';
-        echo $messages[0];
-	}	
+		echo '<input type="text" class="tm-color-picker" name="' . $this->plugin_name . '_plugin[ca_default_color]" value="' . esc_attr($options['ca_default_color']) . '" maxlength="7" size="10"/>';
+	}
 
-    /**
-     * Callback for the options. Sanitized text inputs, this function loops through the incoming option and strips all tags and slashes from the value
-     * before serializing it.
-     *
-     * @params	$input	The unsanitized collection of options.
-     *
-     * @returns	$input	The collection of sanitized values.
-     */
-    public function validate_options( $input ) {
+	/**
+	 * Callback for the options. Sanitized text inputs, this function loops through the incoming option and strips all tags and slashes from the value
+	 * before serializing it.
+	 *
+	 * @params	$input	The unsanitized collection of options.
+	 *
+	 * @returns	$input	The collection of sanitized values.
+	 */
+	public function validate_options( $input ) {
 
 		/**
 		 * Save the orginal options until the input is validated
@@ -376,9 +385,9 @@ class Thematic_Maps_Admin {
 
 		print_r( $input );
 		foreach( $input as $key => $val ) {
-            if( !empty ( trim($input[$key]) ) ) {
-                $new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
-            } else {
+			if( !empty ( trim($input[$key]) ) ) {
+				$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
+			} else {
 				switch( $key ) {
 					case 'maps_apikey':
 						add_settings_error(
@@ -404,8 +413,8 @@ class Thematic_Maps_Admin {
 				}
 				$new_options[$key] = $current_options[$key];
 			}
-        } 
-        return apply_filters( 'validate_options', $new_options, $input );
-    } // end validate_options
+		}
+		return apply_filters( 'validate_options', $new_options, $input );
+	} // end validate_options
 
 }
