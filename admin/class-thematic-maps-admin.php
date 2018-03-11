@@ -837,8 +837,12 @@ class Thematic_Maps_Admin {
 	} // end validate_options
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 >>>>>>> initial region features
 =======
 }
 >>>>>>> iso regions added
+=======
+}
+>>>>>>> origin/multi-region
