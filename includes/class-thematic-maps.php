@@ -42,7 +42,7 @@ class Thematic_Maps {
 	/**
 	 * The unique identifier of this plugin.
 	 *
-	 * @since    1.0.0
+	 * @since    1.0.3
 	 * @access   protected
 	 * @var      string    $plugin_file_name    The string used to track how WordPress identifies this plugin
 	 */
@@ -89,7 +89,7 @@ class Thematic_Maps {
 		if ( defined( 'THEMATIC_MAPS_VERSION' ) ) {
 			$this->version = THEMATIC_MAPS_VERSION;
 		} else {
-			$this->version = '1.0.2';
+			$this->version = '1.0.3';
 		}
 		$this->plugin_name = 'thematic_maps';
 		$this->plugin_title = 'Thematic Maps';
