@@ -16,7 +16,7 @@
  * @subpackage Thematic_Maps/includes
  * @author     Garrett Hunter <garrett.hunter@blacktower.com>
  */
-class Thematic_Maps_Region {
+class Thematic_Maps_Regions {
 
 	/**
 	 * Database primary key

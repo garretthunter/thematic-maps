@@ -23,48 +23,54 @@
 class Thematic_Maps_Activator {
 
 	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
+	 * Called at plugin activation
 	 *
 	 * @since    1.0.0
 	 */
 	public static function activate() {
 
 		global $wpdb;
-		$iso_regions_table = $wpdb->prefix . 'tm_iso_regions';
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		$charset_collate = $wpdb->get_charset_collate();
 
 		/**
-		 * Create the ISO regions table
+		 * Create the ISO regions table and load it with default values
 		 */
-		$sql = "CREATE TABLE $iso_regions_table (
-			id mediumint(9) NOT NULL AUTO_INCREMENT,
-			country_name tinytext NOT NULL,
-			country_code CHAR(2) NOT NULL,
-			region_name TINYTEXT,
-			region_code CHAR(3),
-			sub_region_name TINYTEXT,
-			sub_region_code CHAR(3),
-			is_supported BOOLEAN,
-			PRIMARY KEY  (id)
-		) $charset_collate;";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		$iso_regions_table = $wpdb->prefix . "tm_iso_regions";
+		$sql = "CREATE TABLE {$wpdb->prefix}tm_iso_regions (
+			 id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+			 country_name TINYTEXT NOT NULL,
+			 country_code CHAR(2) NOT NULL,
+			 region_name TINYTEXT,
+			 region_code CHAR(3),
+			 sub_region_name TINYTEXT,
+			 sub_region_code CHAR(3),
+			 is_supported BOOLEAN,
+			 PRIMARY KEY  (id)
+			 ) {$charset_collate};";
 
 		dbDelta( $sql );
 
-		/**
-		 * Load static listing of all ISO 3166 region and country codes
-		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/iso-regions.php';
-
 		$sql = "INSERT INTO $iso_regions_table (id, country_name, country_code, region_name, region_code, sub_region_name, sub_region_code, is_supported ) VALUES \n";
-
-		foreach( $iso_regions as $iso_region ) {
+		foreach( $iso_regions_table as $iso_region ) {
 			$sql = $sql . $iso_region . "\n";
 		}
 		$sql = $sql . ";";
+		dbDelta( $sql );
+
+		/*
+		 * Create a table to store each map and its values
+		 */
+		$sql = "CREATE TABLE {$wpdb->prefix}tm_maps (
+			 id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
+			 map_name TINYTEXT NOT NULL,
+			 region_code CHAR(3) NOT NULL,
+			 ninja_form LONGTEXT NOT NULL,
+			 color_access LONGTEXT NOT NULL,
+			 PRIMARY KEY (id)
+			 ) {$charset_collate};";
+
 		dbDelta( $sql );
 
 	}

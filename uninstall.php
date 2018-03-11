@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Fired when the plugin is uninstalled.
+ * Fired when the plugin is uninstalled (deleted).
  *
  * When populating this file, consider the following flow
  * of control:
@@ -32,4 +32,5 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 
 global $wpdb;
 $wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tm_iso_regions");
+$wpdb->query( "DROP TABLE IF EXISTS {$wpdb->prefix}tm_maps");
 unregister_setting('thematic_maps_settings','thematic_maps_plugin'); delete_option('thematic_maps_plugin');
