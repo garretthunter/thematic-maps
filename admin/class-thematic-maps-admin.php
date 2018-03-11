@@ -143,7 +143,7 @@ class Thematic_Maps_Admin {
 	public function add_plugin_links( $links, $plugin_file ) {
 
 		$plugin_links = array(
-			'<a href="' . admin_url( 'admin.php?page=thematic_maps' ) . '">Settings</a>',
+			'<a href="' . admin_url( 'admin.php?page=thematic_maps' ) . '">' . __( 'Settings', 'thematic_maps_plugin' ) . '</a>',
 		);
 
 		return array_merge( $plugin_links, $links );
