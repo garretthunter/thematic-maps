@@ -42,6 +42,15 @@ class Thematic_Maps {
 	/**
 	 * The unique identifier of this plugin.
 	 *
+	 * @since    1.0.3
+	 * @access   protected
+	 * @var      string    $plugin_file_name    The string used to track how WordPress identifies this plugin
+	 */
+	protected $plugin_file_name;
+
+	/**
+	 * The unique identifier (WordPress slug) of this plugin.
+	 *
 	 * @since    1.0.0
 	 * @access   protected
 	 * @var      string    $plugin_name    The string used to uniquely identify this plugin.
@@ -73,9 +82,10 @@ class Thematic_Maps {
 	 * Load the dependencies, define the locale, and set the hooks for the admin area and
 	 * the public-facing side of the site.
 	 *
-	 * @since    1.0.0
+	 * @since   1.0.0
+	 * @var     $string     $plugin_file_name   The string WordPress uses to identify this plugin
 	 */
-	public function __construct() {
+	public function __construct( $plugin_file_name ) {
 		if ( defined( 'THEMATIC_MAPS_VERSION' ) ) {
 			$this->version = THEMATIC_MAPS_VERSION;
 		} else {
@@ -83,6 +93,7 @@ class Thematic_Maps {
 		}
 		$this->plugin_name = 'thematic_maps';
 		$this->plugin_title = 'Thematic Maps';
+		$this->plugin_file_name = $plugin_file_name;
 
 		$this->load_dependencies();
 		$this->set_locale();
@@ -179,7 +190,8 @@ class Thematic_Maps {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
 
-		$this->loader->add_filter( 'plugin_action_links', $plugin_admin, 'add_settings_link' );
+		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_file_name, $plugin_admin, 'add_plugin_links', 10, 2 );
+
 	}
 
 	/**

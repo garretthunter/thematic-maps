@@ -132,21 +132,23 @@ class Thematic_Maps_Admin {
 
         return $defaults;
 	}
-	
+
 	/**
 	 * Add a Setting link to WordPress plugin list page
 	 *
-	 * @since 1.0.2
+	 * @since 1.0.3
 	 *
 	 * @return array
 	 */
-	public function add_settings_link( $links ) {
+	public function add_plugin_links( $links, $plugin_file ) {
 
-		$settings_link = '<a href="/wp-admin/admin.php?page=' . $this->plugin_name . '">' . __( 'Settings', $this->plugin_name ) . '</a>';
-		array_unshift( $links, $settings_link );
+		$plugin_links = array(
+			'<a href="' . admin_url( 'admin.php?page=thematic_maps' ) . '">' . __( 'Settings', 'thematic_maps_plugin' ) . '</a>',
+		);
 
-		return $links;
-	}
+		return array_merge( $plugin_links, $links );
+
+    }
 
 	public function tm_admin_menu() {
 		add_menu_page(
