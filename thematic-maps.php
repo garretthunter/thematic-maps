@@ -11,7 +11,7 @@
  * Plugin Name:       Thematic Maps
  * Plugin URI:        https://github.com/garretthunter/thematic-maps
  * Description:       Displays a thematic map of the United States of America showing each state shaded in proportion to the measurement of a statistical variable, such as population density or per-capita income. Requires the <a href="https://wordpress.org/plugins/ninja-forms/">Ninja Forms</a> plugin.
- * Version:           1.0.2
+ * Version:           1.0.3
  * Author:            Garrett Hunter
  * Author URI:        https://github.com/garretthunter
  * License:           GPL-3.0+
