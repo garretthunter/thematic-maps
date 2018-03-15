@@ -180,7 +180,9 @@ class Thematic_Maps_Admin {
 		add_settings_field(
 			'option_maps_apikey',						        // ID used to identify the field throughout the theme
 			__( 'Google Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
-			array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
+// TODO: Select callback to use
+//			array( $this, 'maps_apikey_option_callback'),	// The name of the function responsible for rendering the option interface
+			array( $this, 'render_maps_apikey'),	// The name of the function responsible for rendering the option interface
 			$this->plugin_name,	            // The page on which this option will be displayed
 			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
 		);
@@ -280,15 +282,23 @@ class Thematic_Maps_Admin {
 	 * It's called from the 'initialize_plugin_options' function by being passed as a parameter
 	 * in the add_settings_section function.
 	 */
-	public function maps_apikey_option_callback ( $messages ) {
-
-		$continents = new Thematic_Maps_Regions ();
-		print_r( $continents->get_continents());
+// TODO: Select function to match callback
+//	public function maps_apikey_option_callback ( $messages ) {
+//
+//		$continents = new Thematic_Maps_Regions ();
+//		print_r( $continents->get_continents());
+//
+//		$options = get_option($this->plugin_name.'_plugin');
+//
+//		echo '<input type="text" name="' . $this->plugin_name . '_plugin[maps_apikey]" value="' . esc_attr($options['maps_apikey']) . '" maxlength="255" size="40"/>';
+//		echo 'Get your API key at <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
+//
+//	}
+	public function render_maps_apikey ( $messages ) {
 
 		$options = get_option($this->plugin_name.'_plugin');
 
-		echo '<input type="text" name="' . $this->plugin_name . '_plugin[maps_apikey]" value="' . esc_attr($options['maps_apikey']) . '" maxlength="255" size="40"/>';
-		echo 'Get your API key at <a target="_blank" href="https://developers.google.com/maps/documentation/javascript/get-api-key">Google</a>';
+		require_once plugin_dir_path( __FILE__ ) . 'partials/maps_apikey.php';
 
 	}
 
