@@ -39,13 +39,9 @@ class Thematic_Maps_Activator {
 		$iso_regions_table = $wpdb->prefix . "tm_iso_regions";
 		$sql = "CREATE TABLE {$wpdb->prefix}tm_iso_regions (
 			 id MEDIUMINT(9) NOT NULL AUTO_INCREMENT,
-			 country_name TINYTEXT NOT NULL,
-			 country_code CHAR(2) NOT NULL,
-			 region_name TINYTEXT,
-			 region_code CHAR(3),
-			 sub_region_name TINYTEXT,
-			 sub_region_code CHAR(3),
-			 is_supported BOOLEAN,
+			 region_name TINYTEXT NOT NULL,
+			 region_code CHAR(3) NOT NULL,
+			 region_type TINYTEXT NOT NULL,
 			 PRIMARY KEY  (id)
 			 ) {$charset_collate};";
 

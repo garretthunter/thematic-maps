@@ -44,9 +44,18 @@ class Thematic_Maps {
 	 *
 	 * @since    1.0.3
 	 * @access   protected
-	 * @var      string    $plugin_file_name    The string used to track how WordPress identifies this plugin
+	 * @var      string    $plugin_signature    The string used to track how WordPress identifies this plugin.
 	 */
-	protected $plugin_file_name;
+	protected $plugin_signature;
+
+	/**
+	 * This plugin's install directory.
+	 *
+	 * @since    1.1.0
+	 * @access   protected
+	 * @var      string    $plugin_dir    This plugin's install directory.
+	 */
+	protected $plugin_dir;
 
 	/**
 	 * The unique identifier (WordPress slug) of this plugin.
@@ -83,23 +92,28 @@ class Thematic_Maps {
 	 * the public-facing side of the site.
 	 *
 	 * @since   1.0.0
-	 * @var     $string     $plugin_file_name   The string WordPress uses to identify this plugin
+	 *
+	 *
+	 * @param $plugin_signature
+	 * @param $plugin_dir
 	 */
-	public function __construct( $plugin_file_name ) {
+	public function __construct( $plugin_signature, $plugin_dir ) {
 		if ( defined( 'THEMATIC_MAPS_VERSION' ) ) {
 			$this->version = THEMATIC_MAPS_VERSION;
 		} else {
 			$this->version = '1.1.0';
 		}
-		$this->plugin_name = 'thematic_maps';
-		$this->plugin_title = 'Thematic Maps';
-		$this->plugin_file_name = $plugin_file_name;
+		$this->plugin_name      = 'thematic_maps';
+		$this->plugin_title     = 'Thematic Maps';
+		$this->plugin_signature = $plugin_signature;
+		$this->plugin_dir       = $plugin_dir;
 
 		$this->load_dependencies();
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
+		$this->plugin_dir = $plugin_dir;
 	}
 
 	/**
@@ -179,7 +193,7 @@ class Thematic_Maps {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Thematic_Maps_Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title() );
+		$plugin_admin = new Thematic_Maps_Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title(), $this->get_plugin_dir() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
@@ -190,7 +204,7 @@ class Thematic_Maps {
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
 
-		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_file_name, $plugin_admin, 'add_plugin_links', 10, 2 );
+		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_signature, $plugin_admin, 'add_plugin_links', 10, 2 );
 
 	}
 
@@ -241,6 +255,16 @@ class Thematic_Maps {
 	 */
 	public function get_plugin_title() {
 		return $this->plugin_title;
+	}
+
+	/**
+	 * This plugin's install directory.
+	 *
+	 * @since     1.1.0
+	 * @return    string    This plugin's install directory.
+	 */
+	public function get_plugin_dir() {
+		return $this->plugin_dir;
 	}
 
 	/**

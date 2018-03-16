@@ -68,11 +68,11 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-thematic-maps.php';
  *
  * @since    1.0.0
  */
-function run_thematic_maps( $plugin_file_name ) {
+function run_thematic_maps( ) {
 
-    $plugin = new Thematic_Maps( $plugin_file_name );
+    $plugin = new Thematic_Maps( plugin_basename( __FILE__ ), plugin_dir_path( __FILE__ ) );
     $plugin->run();
 
 }
 
-run_thematic_maps( plugin_basename(__FILE__) );
+run_thematic_maps( );

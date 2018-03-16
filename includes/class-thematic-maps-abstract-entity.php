@@ -18,7 +18,7 @@
  * @subpackage Thematic_Maps/includes
  * @author     Garrett Hunter <garrett.hunter@blacktower.com>
  */
-abstract class Thematic_Maps_Abstract_Entity {
+abstract class Thematic_Maps_Abstract_Entity implements ArrayAccess {
 
 	/**
 	 * @var array
