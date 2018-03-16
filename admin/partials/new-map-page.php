@@ -14,8 +14,8 @@
     <form method="post" action="options.php">
 		<?php
 		settings_errors();
-		settings_fields( $this->plugin_name.'_api' );
-		do_settings_sections( $this->plugin_name.'_api');
+		settings_fields( $this->plugin_name.'_new_map' );
+		do_settings_sections( $this->plugin_name.'_new_map');
 		submit_button();
 		?>
     </form>

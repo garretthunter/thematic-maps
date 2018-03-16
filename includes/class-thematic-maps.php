@@ -201,7 +201,8 @@ class Thematic_Maps {
 		/**
 		 * Admin settings page and options
 		 */
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_api_menu' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_new_map_menu' );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
 
 		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_signature, $plugin_admin, 'add_plugin_links', 10, 2 );
