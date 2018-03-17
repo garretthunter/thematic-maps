@@ -116,28 +116,44 @@ class Thematic_Maps_Admin {
 	}
 
 	/**
-     * Set default values for the plugin options.
+     * Set default values for the api options.
      *
 	 * @since 1.0.0
 	 * 
      * @return array
      */
-    public function set_default_options()
+    public function set_default_api_options()
     {
 
         $defaults = [
 	        'maps_apikey' => '',
-	        'default_map' =>
-	        [
-		        'nf_form_id'       => '',
-		        'nf_field'         => '',
-		        'ca_default_color' => '#F5F5F5',
-		        'ca_min_color'     => '#DEF2FC',
-		        'ca_max_color'     => '#003767',
-	        ]
         ];
 
         return $defaults;
+	}
+
+	/**
+	 * Set default values for the new maps.
+	 *
+	 * @since 1.1.0
+	 *
+	 * @return array
+	 */
+	public function set_default_new_map_options()
+	{
+
+		$defaults = [
+			'default_map' =>
+				[
+					'nf_form_id'       => '',
+					'nf_field'         => '',
+					'ca_default_color' => '#F5F5F5',
+					'ca_min_color'     => '#DEF2FC',
+					'ca_max_color'     => '#003767',
+				]
+		];
+
+		return $defaults;
 	}
 
 	/**
@@ -157,21 +173,29 @@ class Thematic_Maps_Admin {
 
     }
 
-	public function tm_api_menu() {
-		add_menu_page(
-			'',
-			'Google API Key',
-			'manage_options', 					// Capability / Permissions
-			$this->plugin_name.'_api', 			    // Menu slug, unique, lowercase
-			array ($this, 'render_tm_options_page'),	// Output / render
-			'dashicons-analytics'
-		);
+	/**
+	 * Save the form data
+	 */
+	public function save() {
+		exit("hello world");
 	}
 
-	public function tm_new_map_menu() {
+	/**
+	 * Define the admin menu structure
+	 */
+	public function tm_admin_menu() {
+		add_menu_page(
+			'Settings',
+			'Thematic Maps',
+			'manage_options', 					// Capability / Permissions
+			$this->plugin_name.'_general', 			    // Menu slug, unique, lowercase
+			array ($this, 'render_tm_general_page'),	// Output / render
+			'dashicons-analytics'
+		);
+
 		add_submenu_page(
-			$this->plugin_name.'_api',
-			'Add New Map',
+			$this->plugin_name.'_general',
+			'New Map',
 			'New Map',
 			'manage_options', 					// Capability / Permissions
 			$this->plugin_name.'_add', 			    // Menu slug, unique, lowercase
@@ -179,18 +203,21 @@ class Thematic_Maps_Admin {
 		);
 	}
 
-	public function tm_settings_init () {
+	/**
+	 * Initialize global settings
+	 */
+	public function tm_global_settings_init () {
 
 		if( false == get_option( $this->plugin_name.'_plugin' ) ) {
-			$defaults = $this->set_default_options();
+			$defaults = $this->set_default_api_options();
 			add_option( $this->plugin_name.'_plugin', $defaults['maps_apikey']  );
 		}
 
 		add_settings_section(
-			$this->plugin_name.'_settings',			                // ID used to identify this section and with which to register options
-			__( $this->plugin_title.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
-			array( $this, 'settings_description_callback'),	        // Callback used to render the description of the section
-			$this->plugin_name.'_api'		                // Page on which to add this section of options
+			$this->plugin_name.'_general',			                // ID used to identify this section and with which to register options
+			__( $this->plugin_title.' Global Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+			array( $this, 'global_settings_description_callback'),	        // Callback used to render the description of the section
+			$this->plugin_name.'_general'		                // Page on which to add this section of options
 		);
 
 		/**
@@ -200,18 +227,33 @@ class Thematic_Maps_Admin {
 			'option_maps_apikey',						        // ID used to identify the field throughout the theme
 			__( 'Google Maps API Key', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_maps_apikey'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_api',	            // The page on which this option will be displayed
-			$this->plugin_name.'_settings'			        // The name of the section to which this field belongs
+			$this->plugin_name.'_general',	            // The page on which this option will be displayed
+			$this->plugin_name.'_general'			        // The name of the section to which this field belongs
 		);
 
-		/**
-		 * New Map fields
-		 */
+		register_setting(
+			$this->plugin_name.'_general',					// Settings group name
+			$this->plugin_name.'_general',						// Option to save
+			array( $this, 'validate_options_global_settings')   // Sanitize callback
+		);
+
+	}
+
+	/**
+	 * Initialize New Map settings page
+	 */
+	public function tm_new_map_settings_init () {
+
+		if( false == get_option( $this->plugin_name.'_maps' ) ) {
+			$defaults = $this->set_default_new_map_options();
+			add_option( $this->plugin_name.'_maps', $defaults['default_map']  );
+		}
+
 		add_settings_section(
 			$this->plugin_name.'_new_map',			                // ID used to identify this section and with which to register options
-			__( $this->plugin_title.' New Map', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+			__( $this->plugin_title.' Add New Map', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
 			array( $this, 'new_map_description_callback'),	        // Callback used to render the description of the section
-			$this->plugin_name.'_new_map'		                // Page on which to add this section of options
+			$this->plugin_name.'_add'		                // Page on which to add this section of options
 		);
 
 		/**
@@ -221,7 +263,7 @@ class Thematic_Maps_Admin {
 			'option_nf_form_id',						        // ID used to identify the field throughout the theme
 			__( 'Ninja Forms', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_nf_form_id'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
+			$this->plugin_name.'_add',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
@@ -232,7 +274,7 @@ class Thematic_Maps_Admin {
 			'option_nf_field',						        // ID used to identify the field throughout the theme
 			__( 'Ninja Forms Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_nf_field'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_new_map',	                // The page on which this option will be displayed
+			$this->plugin_name.'_add',	                // The page on which this option will be displayed
 			$this->plugin_name.'_new_map',			        // The name of the section to which this field belongs
 			array(								        // The array of arguments to pass to the callback. In this case, just a description.
 				__( 'Ninja Forms field to measure.', $this->plugin_name.'plugin' ),
@@ -246,7 +288,7 @@ class Thematic_Maps_Admin {
 			'option_ca_min_color',						        // ID used to identify the field throughout the theme
 			__( 'Color Axis Min Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_ca_min_color'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
+			$this->plugin_name.'_add',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
@@ -257,7 +299,7 @@ class Thematic_Maps_Admin {
 			'option_ca_min_value',						        // ID used to identify the field throughout the theme
 			__( 'Color Axis Max Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_ca_max_color'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
+			$this->plugin_name.'_add',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
@@ -268,27 +310,21 @@ class Thematic_Maps_Admin {
 			'option_ca_default_value',						        // ID used to identify the field throughout the theme
 			__( 'Color Axis Default Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_ca_default_color'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
+			$this->plugin_name.'_add',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
 		register_setting(
-			$this->plugin_name.'_api',					// Settings group name
-			$this->plugin_name.'_api',						// Option to save
-			array( $this, 'validate_options_api')   // Sanitize callback
-		);
-
-		register_setting(
 			$this->plugin_name.'_new_map',					// Settings group name
-			$this->plugin_name.'_new_map',						// Option to save
+			$this->plugin_name.'_maps',						// Option to save
 			array( $this, 'validate_options_new_map')   // Sanitize callback
 		);
 
 	}
 
-	public function render_tm_options_page( $active_tab = '' ) {
+	public function render_tm_general_page( $active_tab = '' ) {
 
-		require_once plugin_dir_path( __FILE__ ) . 'partials/tm-options-page.php';
+		require_once plugin_dir_path( __FILE__ ) . 'partials/tm-general-page.php';
 
 	}
 
@@ -298,7 +334,7 @@ class Thematic_Maps_Admin {
 
 	}
 
-	public function settings_description_callback () {
+	public function global_settings_description_callback () {
 
 		/**
 		 * Add an echo here to output text at the top of the API settings page
@@ -395,7 +431,7 @@ class Thematic_Maps_Admin {
 	 *
 	 * @returns	$input	The collection of sanitized values.
 	 */
-	public function validate_options_api( $input ) {
+	public function validate_options_global_settings( $input ) {
 
 		/**
 		 * Save the orginal options until the input is validated
@@ -403,7 +439,6 @@ class Thematic_Maps_Admin {
 		$current_options = get_option($this->plugin_name.'_plugin');
 		$new_options = array();
 
-		print_r( $input );
 		foreach( $input as $key => $val ) {
 			if( !empty ( trim($input[$key]) ) ) {
 				$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
@@ -416,25 +451,11 @@ class Thematic_Maps_Admin {
 							__('Please enter a valid API Key to continue.', $this->plugin_name),
 							'error' );
 						break;
-					case 'nf_form_id':
-						add_settings_error(
-							$this->plugin_name.'_plugin',
-							$key,
-							__('Please select a Ninja Form.', $this->plugin_name),
-							'error' );
-						break;
-					case 'nf_field':
-						add_settings_error(
-							$this->plugin_name.'_plugin',
-							$key,
-							__('Please enter Ninja Form Field.', $this->plugin_name),
-							'error' );
-						break;
 				}
 				$new_options[$key] = $current_options[$key];
 			}
 		}
-		return apply_filters( 'validate_options_api', $new_options, $input );
+		return apply_filters( 'validate_options_global_settings', $new_options, $input );
 	} // end validate_options
 
 	/**
@@ -450,22 +471,14 @@ class Thematic_Maps_Admin {
 		/**
 		 * Save the orginal options until the input is validated
 		 */
-		$current_options = get_option($this->plugin_name.'_plugin');
+		$current_options = get_option($this->plugin_name.'_maps');
 		$new_options = array();
 
-		print_r( $input );
 		foreach( $input as $key => $val ) {
 			if( !empty ( trim($input[$key]) ) ) {
 				$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
 			} else {
 				switch( $key ) {
-					case 'maps_apikey':
-						add_settings_error(
-							$this->plugin_name.'_plugin',
-							$key,
-							__('Please enter a valid API Key to continue.', $this->plugin_name),
-							'error' );
-						break;
 					case 'nf_form_id':
 						add_settings_error(
 							$this->plugin_name.'_plugin',

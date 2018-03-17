@@ -199,12 +199,22 @@ class Thematic_Maps {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 
 		/**
-		 * Admin settings page and options
+		 * Admin API settings page and options
 		 */
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_api_menu' );
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_new_map_menu' );
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_settings_init' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_global_settings_init' );
 
+		// @todo figure out how to load a standalone form callback
+		$this->loader->add_action( 'admin_post', $plugin_admin, 'validate_options_global_settings' );
+
+		/**
+		 * Admin New Map settings page
+		 */
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_new_map_settings_init' );
+
+		/**
+		 * Additional links on WordPress Plugins page
+		 */
 		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_signature, $plugin_admin, 'add_plugin_links', 10, 2 );
 
 	}

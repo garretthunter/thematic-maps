@@ -15,7 +15,7 @@
 		<?php
 		settings_errors();
 		settings_fields( $this->plugin_name.'_new_map' );
-		do_settings_sections( $this->plugin_name.'_new_map');
+		do_settings_sections( $this->plugin_name.'_add');
 		submit_button();
 		?>
     </form>
