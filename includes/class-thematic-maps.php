@@ -193,7 +193,7 @@ class Thematic_Maps {
 	 */
 	private function define_admin_hooks() {
 
-		$plugin_admin = new Thematic_Maps_Admin( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title(), $this->get_plugin_dir() );
+		$plugin_admin = new Thematic_Maps_Admin( $this->loader, $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title(), $this->get_plugin_dir() );
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );

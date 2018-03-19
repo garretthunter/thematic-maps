@@ -60,11 +60,12 @@ class Thematic_Maps_Admin {
 	 * @param $plugin_title
 	 * @param $plugin_directory
 	 */
-	public function __construct( $plugin_name, $version, $plugin_title, $plugin_directory ) {
+	public function __construct( $loader, $plugin_name, $version, $plugin_title, $plugin_directory ) {
 
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 		$this->plugin_title = $plugin_title;
+		$this->loader = $loader;
 
 		$this->plugin_directory = $plugin_directory;}
 
@@ -423,6 +424,15 @@ class Thematic_Maps_Admin {
 
 	}
 
+// TODO fix this action callback
+	function sample_admin_notice__error() {
+		$class = 'notice notice-error';
+		$message = __( 'Irks! An error has occurred.', $this->plugin_name );
+
+		$this->my_error = new WP_Error( 'toy', 'my favorite toy is dolly', 'best toy' );
+
+		printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), esc_html( $message ) );
+	}
 	/**
 	 * Callback for the options. Sanitized text inputs, this function loops through the incoming option and strips all tags and slashes from the value
 	 * before serializing it.
@@ -431,32 +441,83 @@ class Thematic_Maps_Admin {
 	 *
 	 * @returns	$input	The collection of sanitized values.
 	 */
-	public function validate_options_global_settings( $input ) {
+	public function validate_options_global_settings() {
 
+		$this->loader->add_action( 'admin_notices', $this, 'sample_admin_notice__error' );
+						add_settings_error(
+							$this->plugin_name . '_plugin',
+							'maps_apikey',
+							__( 'Please enter a valid API Key to continue.', $this->plugin_name ),
+							'error' );
+
+		// First, validate the nonce and verify the user as permission to save.
+		if ( ! ( $this->has_valid_nonce() && current_user_can( 'manage_options' ) ) ) {
+			// TODO: Display an error message.
+			add_settings_error(
+				$this->plugin_name . '_plugin',
+				$key,
+				__( 'Please enter a valid API Key to continue.', $this->plugin_name ),
+				'error' );
+		}
+
+		// If the above are valid, sanitize and save the option.
+		if ( null !== wp_unslash( $_POST['maps_apikey'] ) ) {
+
+			$value = sanitize_text_field( $_POST['maps_apikey'] );
+			update_option( $this->plugin_name . '_plugin', $value );
+
+		}
 		/**
 		 * Save the orginal options until the input is validated
 		 */
-		$current_options = get_option($this->plugin_name.'_plugin');
-		$new_options = array();
+//		$current_options = get_option( $this->plugin_name . '_plugin' );
+//		$new_options     = array();
+//
+//		foreach ( $input as $key => $val ) {
+//			if ( ! empty ( trim( $input[ $key ] ) ) ) {
+//				$new_options[ $key ] = strip_tags( stripslashes( $input[ $key ] ) );
+//			} else {
+//				switch ( $key ) {
+//					case 'maps_apikey':
+//						add_settings_error(
+//							$this->plugin_name . '_plugin',
+//							$key,
+//							__( 'Please enter a valid API Key to continue.', $this->plugin_name ),
+//							'error' );
+//						break;
+//				}
+//				$new_options[ $key ] = $current_options[ $key ];
+//			}
+//		}
 
-		foreach( $input as $key => $val ) {
-			if( !empty ( trim($input[$key]) ) ) {
-				$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
-			} else {
-				switch( $key ) {
-					case 'maps_apikey':
-						add_settings_error(
-							$this->plugin_name.'_plugin',
-							$key,
-							__('Please enter a valid API Key to continue.', $this->plugin_name),
-							'error' );
-						break;
-				}
-				$new_options[$key] = $current_options[$key];
-			}
-		}
-		return apply_filters( 'validate_options_global_settings', $new_options, $input );
+		$this->redirect();
+//		return apply_filters( 'validate_options_global_settings', $new_options, $input );
 	} // end validate_options
+
+	/**
+	 * Redirect to the page from which we came (which should always be the
+	 * admin page. If the referred isn't set, then we redirect the user to
+	 * the login page.
+	 *
+	 * @access private
+	 */
+	private function redirect() {
+
+		// To make the Coding Standards happy, we have to initialize this.
+		if ( ! isset( $_POST['_wp_http_referer'] ) ) { // Input var okay.
+			$_POST['_wp_http_referer'] = wp_login_url();
+		}
+
+		// Sanitize the value of the $_POST collection for the Coding Standards.
+		$url = sanitize_text_field(
+			wp_unslash( $_POST['_wp_http_referer'] ) // Input var okay.
+		);
+
+		// Finally, redirect back to the admin page.
+		wp_safe_redirect( urldecode( $url ) );
+		exit;
+
+	}
 
 	/**
 	 * Callback for the options. Sanitized text inputs, this function loops through the incoming option and strips all tags and slashes from the value
@@ -468,36 +529,55 @@ class Thematic_Maps_Admin {
 	 */
 	public function validate_options_new_map( $input ) {
 
-		/**
-		 * Save the orginal options until the input is validated
-		 */
-		$current_options = get_option($this->plugin_name.'_maps');
-		$new_options = array();
+		// First, validate the nonce and verify the user as permission to save.
+		if ( ! ( $this->has_valid_nonce() && current_user_can( 'manage_options' ) ) ) {
+			// TODO: Display an error message.
 
-		foreach( $input as $key => $val ) {
-			if( !empty ( trim($input[$key]) ) ) {
-				$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
-			} else {
-				switch( $key ) {
-					case 'nf_form_id':
-						add_settings_error(
-							$this->plugin_name.'_plugin',
-							$key,
-							__('Please select a Ninja Form.', $this->plugin_name),
-							'error' );
-						break;
-					case 'nf_field':
-						add_settings_error(
-							$this->plugin_name.'_plugin',
-							$key,
-							__('Please enter Ninja Form Field.', $this->plugin_name),
-							'error' );
-						break;
+			// If the above are valid, save the option.
+			/**
+			 * Save the orginal options until the input is validated
+			 */
+			$current_options = get_option($this->plugin_name.'_maps');
+			$new_options = array();
+
+			foreach( $input as $key => $val ) {
+				if( !empty ( trim($input[$key]) ) ) {
+					$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
+				} else {
+					switch( $key ) {
+						case 'nf_form_id':
+							add_settings_error(
+								$this->plugin_name.'_plugin',
+								$key,
+								__('Please select a Ninja Form.', $this->plugin_name),
+								'error' );
+							break;
+						case 'nf_field':
+							add_settings_error(
+								$this->plugin_name.'_plugin',
+								$key,
+								__('Please enter Ninja Form Field.', $this->plugin_name),
+								'error' );
+							break;
+					}
+					$new_options[$key] = $current_options[$key];
 				}
-				$new_options[$key] = $current_options[$key];
 			}
+			return apply_filters( 'validate_options_new_map', $new_options, $input );
+
 		}
-		return apply_filters( 'validate_options_new_map', $new_options, $input );
 	} // end validate_options
 
+	private function has_valid_nonce() {
+
+		// If the field isn't even in the $_POST, then it's invalid.
+		if ( ! isset( $_POST['maps_apikey'] ) ) { // Input var okay.
+			return false;
+		}
+
+		$field  = wp_unslash( $_POST['maps_apikey'] );
+		$action = 'validate_global_settings';
+
+		return wp_verify_nonce( $field, $action );
+	}
 }
