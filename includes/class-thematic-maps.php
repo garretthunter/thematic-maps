@@ -109,9 +109,6 @@ class Thematic_Maps {
 		$this->plugin_dir       = $plugin_dir;
 
 		$this->load_dependencies();
-		$this->set_locale();
-		$this->define_admin_hooks();
-		$this->define_public_hooks();
 
 		$this->plugin_dir = $plugin_dir;
 	}
@@ -138,7 +135,7 @@ class Thematic_Maps {
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
-		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thematic-maps-loader.php';
+//		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-thematic-maps-loader.php';
 
 		/**
 		 * The class responsible for defining internationalization functionality
@@ -163,7 +160,7 @@ class Thematic_Maps {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-thematic-maps-public.php';
 
-		$this->loader = new Thematic_Maps_Loader();
+//		$this->loader = new Thematic_Maps_Loader();
 
 	}
 
@@ -180,7 +177,7 @@ class Thematic_Maps {
 
 		$plugin_i18n = new Thematic_Maps_i18n();
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		add_action( 'plugins_loaded', array($plugin_i18n, 'load_plugin_textdomain' ));
 
 	}
 
@@ -195,27 +192,28 @@ class Thematic_Maps {
 
 		$plugin_admin = new Thematic_Maps_Admin( $this->loader, $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title(), $this->get_plugin_dir() );
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_styles' ));
+		add_action( 'admin_enqueue_scripts', array( $plugin_admin, 'enqueue_scripts' ));
 
 		/**
 		 * Admin API settings page and options
 		 */
-		$this->loader->add_action( 'admin_menu', $plugin_admin, 'tm_admin_menu' );
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_global_settings_init' );
+		add_action( 'admin_menu', array( $plugin_admin, 'tm_admin_menu' ));
+		add_action( 'admin_init', array( $plugin_admin, 'tm_plugin_settings_init' ));
 
-		// @todo figure out how to load a standalone form callback
-		$this->loader->add_action( 'admin_post', $plugin_admin, 'validate_options_global_settings' );
-
+		// TODO figure out how to load a standalone form callback
+		add_action( 'admin_post', array( $plugin_admin, 'validate_options_plugin_settings' ));
+//		add_action( 'admin_notices', array( $plugin_admin, 'sample_admin_notice__error' ));
+//		add_action( 'admin_notices', $plugin_admin, 'validate_options_global_settings' );
 		/**
 		 * Admin New Map settings page
 		 */
-		$this->loader->add_action( 'admin_init', $plugin_admin, 'tm_new_map_settings_init' );
+		add_action( 'admin_init', array( $plugin_admin, 'tm_new_map_settings_init' ));
 
 		/**
 		 * Additional links on WordPress Plugins page
 		 */
-		$this->loader->add_filter( 'plugin_action_links_' . $this->plugin_signature, $plugin_admin, 'add_plugin_links', 10, 2 );
+		add_filter( 'plugin_action_links_' . $this->plugin_signature, array( $plugin_admin, 'add_plugin_links' ), 10, 2 );
 
 	}
 
@@ -230,21 +228,23 @@ class Thematic_Maps {
 
 		$plugin_public = new Thematic_Maps_Public( $this->get_plugin_name(), $this->get_version(), $this->get_plugin_title() );
 
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_styles' );
-		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
+		add_action( 'wp_enqueue_scripts', array( $plugin_public, 'enqueue_styles' ));
+		add_action( 'wp_enqueue_scripts', array( $plugin_public, 'enqueue_scripts' ));
 
         // Unique plugin functionality
-		$this->loader->add_shortcode( 'thematic-maps', $plugin_public, 'show_thematic_maps' );
+		add_shortcode( 'thematic-maps', array( $plugin_public, 'show_thematic_maps' ));
 
 	}
 
 	/**
-	 * Run the loader to execute all of the hooks with WordPress.
+	 * Execute all of the hooks with WordPress.
 	 *
 	 * @since    1.0.0
 	 */
 	public function run() {
-		$this->loader->run();
+		$this->set_locale();
+		$this->define_admin_hooks();
+		$this->define_public_hooks();
 	}
 
 	/**
@@ -278,15 +278,16 @@ class Thematic_Maps {
 		return $this->plugin_dir;
 	}
 
+//	todo remove function
 	/**
 	 * The reference to the class that orchestrates the hooks with the plugin.
 	 *
 	 * @since     1.0.0
 	 * @return    Thematic_Maps_Loader    Orchestrates the hooks of the plugin.
 	 */
-	public function get_loader() {
-		return $this->loader;
-	}
+//	public function get_loader() {
+//		return $this->loader;
+//	}
 
 	/**
 	 * Retrieve the version number of the plugin.

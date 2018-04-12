@@ -11,17 +11,7 @@
 ?>
 
 <div class="wrap">
-    <?php
-    settings_errors();
-
-    ?>
     <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-    <h2 class="nav-tab-wrapper">
-        <span class="nav-tab nav-tab-active">Global</span>
-        <a class="nav-tab " href="#" target="">
-            New Map
-        </a>
-    </h2>
     <div id="poststuff">
         <form method="post" action="<?php echo esc_html( admin_url( 'admin-post.php' ) ); ?>">
             <table class="form-table">
@@ -42,13 +32,12 @@
 	        ?>
         </form>
     </div>
-<?php /*        <form method="post" action="options.php">
+       <form method="post" action="options.php">
 			<?php
 			settings_errors();
-			settings_fields( $this->plugin_name.'_general' );
-			do_settings_sections( $this->plugin_name.'_general');
+			settings_fields( $this->plugin_name.'_plugin' );
+			do_settings_sections( $this->plugin_name.'_plugin');
 			submit_button();
 			?>
         </form>
- */ ?>
 </div><!-- /.wrap -->
