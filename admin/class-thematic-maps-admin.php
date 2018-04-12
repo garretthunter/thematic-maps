@@ -182,7 +182,7 @@ class Thematic_Maps_Admin {
 	{
 
 		$defaults = [
-			'maps_apikey' => '',
+			'maps_apikey' => 'DEFAULT',
 		];
 
 		return $defaults;
@@ -193,14 +193,14 @@ class Thematic_Maps_Admin {
 	 */
 	public function tm_plugin_settings_init () {
 
-		if( false == get_option( $this->plugin_name.'_plugin' ) ) {
+		if( true == get_option( $this->plugin_name.'_plugin' ) ) {
 			$defaults = $this->set_default_plugin_options();
 			add_option( $this->plugin_name.'_plugin', $defaults['maps_apikey']  );
 		}
 
 		add_settings_section(
 			$this->plugin_name.'_plugin',			                // ID used to identify this section and with which to register options
-			__( $this->plugin_title.' Global Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+			__( $this->plugin_title.' Plugin Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
 			array( $this, 'plugin_settings_description_callback'),	        // Callback used to render the description of the section
 			$this->plugin_name.'_plugin'		                // Page on which to add this section of options
 		);
@@ -275,7 +275,32 @@ class Thematic_Maps_Admin {
 	 */
 	public function validate_options_plugin_settings() {
 
-		$new_options = 'GARRETT';
+		/**
+		 * Save the orginal options until the input is validated
+		 */
+		$current_options = get_option($this->plugin_name.'_plugin');
+		$new_options = array();
+
+		print_r( $input );
+		foreach( $input as $key => $val ) {
+			if( !empty ( trim($input[$key]) ) ) {
+				$new_options[$key] = strip_tags( stripslashes( $input[$key] ) );
+			} else {
+				switch( $key ) {
+					case 'maps_apikey':
+						add_settings_error(
+							$this->plugin_name.'_plugin',
+							$key,
+							__('Please enter a valid API Key to continue.', $this->plugin_name),
+							'error' );
+						break;
+				}
+				$new_options[$key] = $current_options[$key];
+			}
+		}
+		return apply_filters( 'validate_options', $new_options, $input );
+
+//		$new_options = 'GARRETT';
 		// First, validate the nonce and verify the user as permission to save.
 		// If the above are valid, sanitize and save the option.
 //		if ( null !== wp_unslash( $_POST['maps_apikey'] ) ) {
@@ -311,7 +336,7 @@ class Thematic_Maps_Admin {
 //		}
 
 //		$this->redirect();
-		return apply_filters( 'validate_options_plugin_settings', $new_options, $input );
+//		return apply_filters( 'validate_options_plugin_settings', $new_options, $input );
 	} // end validate_options
 
 	/*  ============================================================================
