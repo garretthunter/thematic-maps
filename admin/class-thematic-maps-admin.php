@@ -200,7 +200,7 @@ class Thematic_Maps_Admin {
 
 		add_settings_section(
 			$this->plugin_name.'_plugin',			                // ID used to identify this section and with which to register options
-			__( $this->plugin_title.' Plugin Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+			__( $this->plugin_title.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
 			array( $this, 'plugin_settings_description_callback'),	        // Callback used to render the description of the section
 			$this->plugin_name.'_plugin'		                // Page on which to add this section of options
 		);
@@ -273,7 +273,7 @@ class Thematic_Maps_Admin {
 	 *
 	 * @returns	$input	The collection of sanitized values.
 	 */
-	public function validate_options_plugin_settings() {
+	public function validate_options_plugin_settings( $input ) {
 
 		/**
 		 * Save the orginal options until the input is validated

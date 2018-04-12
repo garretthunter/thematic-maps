@@ -200,7 +200,7 @@ class Thematic_Maps {
 		 */
 		add_action( 'admin_menu', array( $plugin_admin, 'tm_admin_menu' ));
 		add_action( 'admin_init', array( $plugin_admin, 'tm_plugin_settings_init' ));
-		add_action( 'admin_post', array( $plugin_admin, 'validate_options_plugin_settings' ));
+//		add_action( 'admin_post', array( $plugin_admin, 'validate_options_plugin_settings' ));
 
 		// TODO figure out how to load a standalone form callback
 //		add_action( 'admin_notices', array( $plugin_admin, 'sample_admin_notice__error' ));
