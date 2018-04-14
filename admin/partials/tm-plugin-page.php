@@ -27,7 +27,6 @@
 
    <form method="post" action="options.php">
         <?php
-        settings_errors();
 
         if ( 'settings' == $active_tab ) {
 	        settings_fields( $this->plugin_name.'_plugin' );

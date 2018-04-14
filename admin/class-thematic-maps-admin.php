@@ -150,7 +150,7 @@ class Thematic_Maps_Admin {
 	 */
 	public function tm_admin_menu() {
 		add_menu_page(
-			'Settings',
+			'Thematic Maps',
 			'Thematic Maps',
 			'manage_options', 					// Capability / Permissions
 			$this->plugin_name.'_plugin', 			    // Menu slug, unique, lowercase
@@ -160,12 +160,22 @@ class Thematic_Maps_Admin {
 
 		add_submenu_page(
 			$this->plugin_name.'_plugin',
-			'New Map',
-			'New Map',
+			'Settings',
+			'Settings',
 			'manage_options', 					// Capability / Permissions
-			$this->plugin_name.'_add', 			    // Menu slug, unique, lowercase
-			array ($this, 'render_new_map_page')	// Output / render
+			$this->plugin_name.'_plugin', 			    // Menu slug, unique, lowercase
+			array ($this, 'render_tm_plugin_page')	// Output / render
 		);
+
+		add_submenu_page(
+			$this->plugin_name.'_plugin',
+			'Maps',
+			'Maps',
+			'manage_options', 					// Capability / Permissions
+			$this->plugin_name.'_maps', 			    // Menu slug, unique, lowercase
+			array ($this, 'render_page_maps')	// Output / render
+		);
+
 	}
 
 	/*  ============================================================================
@@ -380,7 +390,7 @@ class Thematic_Maps_Admin {
 			$this->plugin_name.'_new_map',			                // ID used to identify this section and with which to register options
 			__( $this->plugin_title.' Add New Map', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
 			array( $this, 'new_map_description_callback'),	        // Callback used to render the description of the section
-			$this->plugin_name.'_add'		                // Page on which to add this section of options
+			$this->plugin_name.'_new_map'		                // Page on which to add this section of options
 		);
 
 		/**
@@ -390,7 +400,7 @@ class Thematic_Maps_Admin {
 			'option_nf_form_id',						        // ID used to identify the field throughout the theme
 			__( 'Ninja Forms', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_nf_form_id'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_add',	            // The page on which this option will be displayed
+			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
@@ -401,7 +411,7 @@ class Thematic_Maps_Admin {
 			'option_nf_field',						        // ID used to identify the field throughout the theme
 			__( 'Ninja Forms Field', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_nf_field'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_add',	                // The page on which this option will be displayed
+			$this->plugin_name.'_new_map',	                // The page on which this option will be displayed
 			$this->plugin_name.'_new_map',			        // The name of the section to which this field belongs
 			array(								        // The array of arguments to pass to the callback. In this case, just a description.
 				__( 'Ninja Forms field to measure.', $this->plugin_name.'plugin' ),
@@ -415,7 +425,7 @@ class Thematic_Maps_Admin {
 			'option_ca_min_color',						        // ID used to identify the field throughout the theme
 			__( 'Color Axis Min Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_ca_min_color'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_add',	            // The page on which this option will be displayed
+			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
@@ -426,7 +436,7 @@ class Thematic_Maps_Admin {
 			'option_ca_min_value',						        // ID used to identify the field throughout the theme
 			__( 'Color Axis Max Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_ca_max_color'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_add',	            // The page on which this option will be displayed
+			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
@@ -437,22 +447,34 @@ class Thematic_Maps_Admin {
 			'option_ca_default_value',						        // ID used to identify the field throughout the theme
 			__( 'Color Axis Default Color', 'thematic_maps_plugin' ),					// The label to the left of the option interface element
 			array( $this, 'render_ca_default_color'),	// The name of the function responsible for rendering the option interface
-			$this->plugin_name.'_add',	            // The page on which this option will be displayed
+			$this->plugin_name.'_new_map',	            // The page on which this option will be displayed
 			$this->plugin_name.'_new_map'			        // The name of the section to which this field belongs
 		);
 
 		register_setting(
 			$this->plugin_name.'_new_map',					// Settings group name
-			$this->plugin_name.'_maps',						// Option to save
+			$this->plugin_name.'_new_map',						// Option to save
 			array( $this, 'validate_options_new_map')   // Sanitize callback
 		);
 
 	}
 
-	public function render_new_map_page( $active_tab = 'maps' ) {
+	public function render_new_map_page( $active_tab = 'new' ) {
 
-		$active_tab = 'maps';
 		require_once plugin_dir_path( __FILE__ ) . 'partials/new-map-page.php';
+
+	}
+
+	/**
+	 * This function displays the list of maps
+	 *
+	 * @since 1.1.0
+	 *
+	 * @param $active_tab   The currently active tab
+	 */
+	public function render_page_maps( $active_tab = 'maps' ) {
+
+		require_once plugin_dir_path( __FILE__ ) . 'partials/page-maps.php';
 
 	}
 
