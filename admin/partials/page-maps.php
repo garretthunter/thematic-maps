@@ -19,7 +19,7 @@
 	?>
 
     <h2 class="nav-tab-wrapper">
-        <a href="?page=thematic_maps_maps&tab=maps" class="nav-tab <?php echo $active_tab == 'maps' ? 'nav-tab-active' : ''; ?>">Maps</a>
+        <a href="?page=thematic_maps_maps&tab=maps" class="nav-tab <?php echo $active_tab == 'maps' ? 'nav-tab-active' : ''; ?>">Available Maps</a>
         <a href="?page=thematic_maps_maps&tab=new_map" class="nav-tab <?php echo $active_tab == 'new_map' ? 'nav-tab-active' : ''; ?>">New Map</a>
     </h2>
 
@@ -34,23 +34,19 @@
 		?>
     </form>
 
-    <?php } else { ?>
-        <h2>Available Maps</h2>
+    <?php
+    } else { ?>
         <table class="wp-list-table widefat fixed striped ">
             <thead>
                 <tr>
-                    <td class="manage-column column-cb check-column">
-                        <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
-                        <input id="cb-select-all-1" type="checkbox">
-                    </td>
                     <th id="title" class="manage-column column-title column-primary sortable desc" scope="col">
-                        <span>Title</span>
+                        <span>Shortcode ID</span>
                     </th>
                     <th id="form" class="manage-column column-form sortable desc" scope="col">
-                        <span>Form</span>
+                        <span>Ninja Form</span>
                     </th>
                     <th id="field" class="manage-column column-field sortable desc" scope="col">
-                        <span>Field</span>
+                        <span>Ninja Form Field</span>
                     </th>
                     <th id="min-color" class="manage-column column-min-color sortable desc" scope="col">
                         <span>Min Color</span>
@@ -60,7 +56,37 @@
                     </th>
                 </tr>
             </thead>
+            <tbody id="the-list">
+            <?php foreach ( $available_maps as $map ) { ?>
+                <tr>
+                    <th id="title" class="manage-column column-title column-primary sortable desc" scope="col">
+                        <span><?php echo $map['thematic_maps_id'] ?></span>
+                    </th>
+                    <th id="form" class="manage-column column-form sortable desc" scope="col">
+                        <span><?php echo $map['nf_form_id'] ?></span>
+                    </th>
+                    <th id="field" class="manage-column column-field sortable desc" scope="col">
+                        <span><?php echo $map['nf_field'] ?></span>
+                    </th>
+                    <th id="min-color" class="manage-column column-min-color sortable desc" scope="col" bgcolor="<?php echo $map['ca_min_color'] ?>">
+                        <span> </span>
+                    </th>
+                    <th id="max-color" class="manage-column column-max-color sortable desc" scope="col" bgcolor="<?php echo $map['ca_max_color'] ?>">
+                        <span> </span>
+                    </th>
+                </tr>
+            <?php } ?>
+            </tbody>
+            <tfoot>
+                <tr>
+
+                </tr>
+            </tfoot>
         </table>
-    <?php } ?>
+    <?php
+
+        submit_button( 'Add New' );
+
+    } ?>
 
 </div><!-- /.wrap -->

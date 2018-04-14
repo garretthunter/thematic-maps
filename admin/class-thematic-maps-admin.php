@@ -192,7 +192,7 @@ class Thematic_Maps_Admin {
 	{
 
 		$defaults = [
-			'maps_apikey' => 'DEFAULT',
+			'maps_apikey' => '',
 		];
 
 		return $defaults;
@@ -210,7 +210,7 @@ class Thematic_Maps_Admin {
 
 		add_settings_section(
 			$this->plugin_name.'_plugin',			                // ID used to identify this section and with which to register options
-			__( $this->plugin_title.' Settings', 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
+			__( $this->plugin_title, 'thematic_maps_plugin' ),	// Title to be displayed on the administration page
 			array( $this, 'plugin_settings_description_callback'),	        // Callback used to render the description of the section
 			$this->plugin_name.'_plugin'		                // Page on which to add this section of options
 		);
@@ -473,6 +473,34 @@ class Thematic_Maps_Admin {
 	 * @param $active_tab   The currently active tab
 	 */
 	public function render_page_maps( $active_tab = 'maps' ) {
+
+		$available_maps = [
+			[
+				'thematic_maps_id' => '1',
+				'nf_form_id'       => 'Repeal the 2nd',
+				'nf_field'         => 'State',
+				'ca_default_color' => '#F5F5F5',
+				'ca_min_color'     => '#DEF2FC',
+				'ca_max_color'     => '#003767',
+			],
+			[
+				'thematic_maps_id' => '2',
+				'nf_form_id'       => 'Population Density',
+				'nf_field'         => 'State',
+				'ca_default_color' => '#F5F5F5',
+				'ca_min_color'     => '#DEF2FC',
+				'ca_max_color'     => '#003767',
+			],
+			[
+				'thematic_maps_id' => '3',
+				'nf_form_id'       => 'Crime Rates',
+				'nf_field'         => 'Country',
+				'ca_default_color' => '#F5F5F5',
+				'ca_min_color'     => '#DEF2FC',
+				'ca_max_color'     => '#003767',
+			],
+		];
+
 
 		require_once plugin_dir_path( __FILE__ ) . 'partials/page-maps.php';
 
